@@ -1,1 +1,29 @@
+# EXPECTED RETURN: (If you do not get similar information, please reach out in the Issues section)
+# local data={'value': 1, 'x': 0, 'y': 'c', 'check': False, 'values': {1: 'a', 2: 'b', 3: 'c'}, 'new_value': 'a'}
+# output='a'
 
+# This is a comment
+
+let x: int = 0;   # Semi colons are fully optional
+y = 'c'
+
+if y:str == 'a':char {
+  return 1
+}
+elif y:str == 'b':char {
+  return 2
+}
+else {
+  let check = if not x:int == 3:int;
+  while check {
+    x = x + 1
+    check = if not x:int == 3:int
+  }
+}
+
+def navigate_dict -> str (value: int) {
+  values = {1: 'a', 2: 'b', 3: 'c'}
+  new_value = values.value:int; return new_value
+}
+
+return navigate_dict(1)   # Returns 'a'
