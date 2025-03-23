@@ -14,26 +14,26 @@ Stream is a new, flexible, and portable multi-paradigm programming language desi
 ```python
 # This is a comment
 
-let x: int = 0;   # semi colons are fully optional
+let x: int = 0;   # Semi colons are fully optional
 y = 'c'
 
-if y == 'a' {
+if y:str == 'a':char {
   return 1
 }
-elif y == 'b' {
+elif y:str == 'b':char {
   return 2
 }
 else {
-  let check = if not x == 3;
+  let check = if not x:int == 3:int;
   while check {
     x = x + 1
-    check = if not x == 3
+    check = if not x:int == 3:int
   }
 }
 
 def navigate_dict -> str (value: int) {
   values = {1: 'a', 2: 'b', 3: 'c'}
-  new_value = values[value]; return new_value
+  new_value = values.value:int; return new_value
 }
 
 return navigate_dict(1)
