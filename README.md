@@ -56,10 +56,10 @@ return navigate_dict()
     python "[PATH_TO_COMPILER]" "[PATH_TO_YOUR_STREAM_FILE]"
     ```
 
-* **Important:** If your file paths contain spaces, replace them with `+` symbols. For example:
+* **Important:** Remember to use `"` marks, for example:
 
     ```
-    python "C:\My+Projects\Stream\final_compiler.py" "C:\My+Projects\Stream\my+program.stream"
+    python "C:\My Projects\Stream\final_compiler.py" "C:\My Projects\Stream\my program.stream"
     ```
 
 ### Interpretation
@@ -71,7 +71,7 @@ return navigate_dict()
     python "[PATH_TO_INTERPRETER]" "[PATH_TO_COMPILED_FILE]" "[RETURN_TYPE]" "{}"
     ```
 
-* **Important:** Replace spaces in file paths with `+` symbols.
+* **Important:** Remember to use `"` marks.
 * **Note:** The `[RETURN_TYPE]` specifies the expected return type (e.g., `int`, `str`). The `{}` represents JSON parameters, which are typically empty for basic execution.
 
 ## Simplified Commands (Windows PowerShell ONLY)
