@@ -12,10 +12,10 @@ Stream is a new, flexible, and portable multi-paradigm programming language desi
 
 ## Stream Syntax Examples
 ```stream
-\# This is a comment
+# This is a comment
 
-let x: int = 0  \# Define an integer variable x
-y = 'a'         \# Define a character variable y
+let x: int = 0  # Define an integer variable x
+y = 'a'         # Define a character variable y
 
 if y == 'a' {
   return 1
@@ -24,16 +24,16 @@ elif y == 'b' {
   return 2
 }
 else {
-  let check = if not x == 3 \# Define a boolean variable 'check'
-  while check {          \# Execute code while check is true
-    x = x + 1             \# Increment x
-    check = if not x == 3 \# Recalculate check
+  let check = if not x == 3 # Define a boolean variable 'check'
+  while check {             # Execute code while check is true
+    x = x + 1               # Increment x
+    check = if not x == 3   # Recalculate check
   }
 }
 
-def navigate_dict -> str (value: int) { \# Define a function 'navigate_dict'
-  values = {1: 'a', 2: 'b', 3: 'c'}     \# Define a dictionary
-  new_value = values.value; return new_value \# Access dictionary value and return
+def navigate_dict -> str (value: int) { # Define a function 'navigate_dict'
+  values = {1: 'a', 2: 'b', 3: 'c'}     # Define a dictionary
+  new_value = values.value; return new_value # Access dictionary value and return
 }
 
 return navigate_dict()
