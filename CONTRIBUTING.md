@@ -30,6 +30,16 @@ Please order your code to the following conventions: (**NOTE:** if your code has
 
 ### APPROVED LANGUAGES
 
+|   Language   |   Supported   |
+|   -------   |   ------------------   |
+|   python              |   :white_check_mark:                       |
+|   HTML / CSS          |   DO NOT USE UNLESS NECESSARY              |
+|   powershell script   |   DO NOT USE UNLESS NECESSARY              |
+|   C / C++             |   ONLY APPROVED FOR NEW VERSION LANGUAGE   |
+|   Rust                |   ONLY APPROVED FOR NEW VERSION LANGUAGE   |
+|   JS                  |   ONLY APPROVED FOR NEW VERSION LANGUAGE   |
+|   Java / Kotlin       |   ONLY APPROVED FOR NEW VERSION LANGUAGE   |
+
 ### MALWARE
 
 **DO NOT SEND MALWARE,** if you do send dangerous programs they will not be deployed, and any future pull requests will be ignored.
