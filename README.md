@@ -125,3 +125,7 @@ To make this easier on Windows, you can add functions to your PowerShell profile
 * If you wish to reach out to us, please feel free to contact us at our email, streamissues@gmail.com.
 * If you wish to report an issue or bug, please enter it under the Issues section.
 * For any major security concerns, please read our instructions in the SECURITY.md file. Please **DO NOT** post major security issues in the Issues section or send them publicly until the issue has been resolved.
+* 
+## For More Details
+
+Please read our wiki page for more details on language syntax, next steps, or any other issues.
