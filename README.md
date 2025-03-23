@@ -14,8 +14,8 @@ Stream is a new, flexible, and portable multi-paradigm programming language desi
 ```python
 # This is a comment
 
-let x: int = 0;
-y = 'a'
+let x: int = 0;   # semi colons are fully optional
+y = 'c'
 
 if y == 'a' {
   return 1
