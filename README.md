@@ -35,6 +35,7 @@ def navigate_dict -> str (value: int) {
 }
 
 return navigate_dict(1);
+```
 
 ## Getting Started (Temporary Instructions)
 
