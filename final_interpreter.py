@@ -20,9 +20,9 @@ def main():
         print(f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_YELLOW}'
               f'Too many arguments{RESET} {FG_BRIGHT_BLUE}(Should have 3: file path, return type, parameters){RESET}')
 
-    f = sys.argv[1].replace('+', ' ')
+    f = sys.argv[1]
     return_type = sys.argv[2]
-    params = str(sys.argv[3]).replace('+', ' ')
+    params = str(sys.argv[3])
 
     print(f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {FG_BRIGHT_GREEN}Running with parameters {RESET}:'
           f' \n{FG_BRIGHT_BLUE}return type={return_type}, parameters={params}{RESET}\n')
