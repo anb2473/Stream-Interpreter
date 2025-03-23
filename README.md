@@ -52,13 +52,13 @@ return navigate_dict()
 * Open your terminal or command prompt.
 * Run the compiler using:
 
-    ```
+    ```powershell
     python "[PATH_TO_COMPILER]" "[PATH_TO_YOUR_STREAM_FILE]"
     ```
 
 * **Important:** Remember to use `"` marks, for example:
 
-    ```
+    ```powershell
     python "C:\My Projects\Stream\final_compiler.py" "C:\My Projects\Stream\my program.stream"
     ```
 
@@ -67,7 +67,7 @@ return navigate_dict()
 * The Stream interpreter executes the compiled file.
 * After compilation, run the interpreter using:
 
-    ```
+    ```powershell
     python "[PATH_TO_INTERPRETER]" "[PATH_TO_COMPILED_FILE]" "[RETURN_TYPE]" "{}"
     ```
 
@@ -105,8 +105,8 @@ To make this easier on Windows, you can add functions to your PowerShell profile
 
     Now, you can use:
 
-    * `compile_stream "[PATH_TO_STREAM_FILE]"`
-    * `interpret_stream "[PATH_TO_COMPILED_FILE]" "[RETURN_TYPE]" "{}"`
+    * `compile_stream " [PATH_TO_STREAM_FILE]"`
+    * `interpret_stream " [PATH_TO_COMPILED_FILE]" "[RETURN_TYPE]" "{}"`
 
 ## System Details
 
