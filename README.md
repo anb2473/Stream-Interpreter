@@ -12,31 +12,29 @@ Stream is a new, flexible, and portable multi-paradigm programming language desi
 
 ## Stream Syntax Examples
 ```stream
-# This is a comment
+# This is a <span style="color: gray;">comment</span>
 
-let x: int = 0  # Define an integer variable x
-y = 'a'         # Define a character variable y
+<span style="color: blue;">let</span> <span style="color: green;">x</span>: <span style="color: blue;">int</span> = <span style="color: darkred;">0</span>;  <span style="color: gray;"># Define an integer variable x</span>
+<span style="color: green;">y</span> = <span style="color: brown;">'a'</span>;           <span style="color: gray;"># Define a character variable y</span>
 
-if y == 'a' {
-  return 1
-}
-elif y == 'b' {
-  return 2
-}
-else {
-  let check = if not x == 3 # Define a boolean variable 'check'
-  while check {             # Execute code while check is true
-    x = x + 1               # Increment x
-    check = if not x == 3   # Recalculate check
+<span style="color: blue;">if</span> <span style="color: green;">y</span> == <span style="color: brown;">'a'</span> {
+  <span style="color: blue;">return</span> <span style="color: darkred;">1</span>;
+} <span style="color: blue;">elif</span> <span style="color: green;">y</span> == <span style="color: brown;">'b'</span> {
+  <span style="color: blue;">return</span> <span style="color: darkred;">2</span>;
+} <span style="color: blue;">else</span> {
+  <span style="color: blue;">let</span> <span style="color: green;">check</span> = <span style="color: blue;">if</span> <span style="color: blue;">not</span> <span style="color: green;">x</span> == <span style="color: darkred;">3</span>; <span style="color: gray;"># Define a boolean variable 'check'</span>
+  <span style="color: blue;">while</span> <span style="color: green;">check</span> {          <span style="color: gray;"># Execute code while check is true</span>
+    <span style="color: green;">x</span> = <span style="color: green;">x</span> + <span style="color: darkred;">1</span>;        <span style="color: gray;"># Increment x</span>
+    <span style="color: green;">check</span> = <span style="color: blue;">if</span> <span style="color: blue;">not</span> <span style="color: green;">x</span> == <span style="color: darkred;">3</span>;    <span style="color: gray;"># Recalculate check</span>
   }
 }
 
-def navigate_dict -> str (value: int) { # Define a function 'navigate_dict'
-  values = {1: 'a', 2: 'b', 3: 'c'}     # Define a dictionary
-  new_value = values.value; return new_value # Access dictionary value and return
+<span style="color: blue;">def</span> <span style="color: green;">navigate_dict</span> -> <span style="color: blue;">str</span> (<span style="color: green;">value</span>: <span style="color: blue;">int</span>) { <span style="color: gray;"># Define a function 'navigate_dict'</span>
+  <span style="color: green;">values</span> = {<span style="color: darkred;">1</span>: <span style="color: brown;">'a'</span>, <span style="color: darkred;">2</span>: <span style="color: brown;">'b'</span>, <span style="color: darkred;">3</span>: <span style="color: brown;">'c'</span>};      <span style="color: gray;"># Define a dictionary</span>
+  <span style="color: green;">new_value</span> = <span style="color: green;">values</span>.<span style="color: green;">value</span>; <span style="color: blue;">return</span> <span style="color: green;">new_value</span>; <span style="color: gray;"># Access dictionary value and return</span>
 }
 
-return navigate_dict()
+<span style="color: blue;">return</span> <span style="color: green;">navigate_dict</span>();
 ```
 
 ## Getting Started (Temporary Instructions)
