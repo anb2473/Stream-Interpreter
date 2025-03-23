@@ -309,6 +309,13 @@ class App(threading.Thread):
                             f'Return without statement:{RESET} {ITALIC}\'{line}\'{RESET}'
                             f', {FG_BRIGHT_BLUE}line {i}{RESET}')
                         new_line = f'{new_line.strip()} void'
+                    if ((new_line.strip().endswith(')') and new_line.__contains__('('))
+                            and not new_line.__contains__('exec')):
+                        new_line = f'return exec {new_line[7:]}'
+                        print(
+                            f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_YELLOW}'
+                            f'No exec tag:{RESET} {ITALIC}\'{line}\'{RESET}'
+                            f', {FG_BRIGHT_BLUE}line {i}{RESET}')
                 # SET NAMESPACE
                 elif new_line.startswith('namespace'):
                     namespace = new_line[10:]
@@ -322,7 +329,7 @@ class App(threading.Thread):
                 # IF LINE CONTAINS = THAT IS NOT A PART OF A ==
                 if re.search(r"(?<!=)=(?!=)", new_line):
                     # IF LINE DOES NOT HAVE AN EXEC TAG
-                    if ((new_line.strip().endswith(')') and new_line.__contains__(')'))
+                    if ((new_line.strip().endswith(')') and new_line.__contains__('('))
                             and not new_line.__contains__('exec')):
                         new_line = f'{new_line.split('=')[0].strip()} = exec {new_line.split('=', 1)[1].strip()}'
                         print(
@@ -376,7 +383,7 @@ class App(threading.Thread):
                             f'No let tag:{RESET} {ITALIC}\'{line}\'{RESET}'
                             f', {FG_BRIGHT_BLUE}line {i}{RESET}')
                 # IF LINE EXECUTES FUNCTION BUT DOES NOT CONTAIN AN EQUALS STATEMENT INSERT VOID STATEMENT
-                if new_line.__contains__('exec') and not re.search(r"(?<!=)=(?!=)", new_line):
+                if new_line.__contains__('exec') and not re.search(r"(?<!=)=(?!=)", new_line) and not line.startswith('return'):
                     new_line = f'let _:void = {new_line}'
                     print(
                         f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_YELLOW}'
@@ -453,6 +460,7 @@ class App(threading.Thread):
             elif line.startswith('def'):
                 in_foo = True
                 # GENERATE PROTOTYPE STATEMENT
+                print(line.split('(')[1].split(')')[0].split(','), "SSS")
                 new_line = (
                     f'prototype {line[4:].split(' ')[0]} \"{self.active_directory}\\build\\build_'
                     f'{os.path.basename(self.path).split('.')[0]}\\functions\\{line[4:].split(' ')[0]}.fsl\"'
@@ -460,7 +468,7 @@ class App(threading.Thread):
                     f'{str(line.split('(')[1].split(')')[0].split(','))
                     .replace('\'', '').replace(']', ')')
                     .replace('[', '(')
-                    if len(line.split('(')[1].split(')')[0].split(',')) > 1 else ''}')
+                    if line.split('(')[1].split(')')[0].split(',') != [''] else '()'}')
                 depth = 0
                 data = ''
                 jump_num = 1
@@ -567,7 +575,7 @@ class App(threading.Thread):
                 in_while = True
                 while_var = split_line[0]
                 # RESET GENERAL DEPTH
-                general_depth = 0
+                # general_depth = 0
 
             elif line == '}':
                 general_depth -= 1
@@ -575,7 +583,7 @@ class App(threading.Thread):
                     # INSERT RETURN STATEMENT IF NO RETURN STATEMENT EXISTS
                     if index - 1 >= 0 and not split_file[index - 1].startswith('return'):
                         new_file += f'return void\n'
-                elif in_while and general_depth <= 0:
+                elif in_while and general_depth == 0:
                     # INSERT JUMP TO WHILE LOOP START IF CONDITIONAL STILL TRUE
                     new_line = f'do {while_var} {-while_jump_num.pop()}'
                 else:
@@ -600,7 +608,7 @@ def main():
         print(f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_YELLOW}'
               f'Too many arguments{RESET} {FG_BRIGHT_BLUE}(Should have 3: file path, return type, parameters){RESET}')
 
-    path = sys.argv[1].replace('+', ' ')
+    path = sys.argv[1]
 
     print(f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {FG_BRIGHT_GREEN}Running with parameters {RESET}:'
           f' \n{FG_BRIGHT_BLUE}path={path}{RESET}\n')
