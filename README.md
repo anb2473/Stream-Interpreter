@@ -44,7 +44,7 @@ return navigate_dict(1)
 **Note:** We are actively developing an installer to simplify this process.
 
 1.  **Install Python:** Download and install Python from (python.org/downloads).
-2.  **Locate Compiler and Interpreter:** Find the `final_compiler.py` and `final_interpreter.py` files within the cloned repository.
+2.  **Locate Compiler and Interpreter:** Find the `compiler.py` and `interpreter.py` files within the cloned repository.
 
 ### Compilation
 
@@ -59,7 +59,7 @@ return navigate_dict(1)
 * **Important:** Remember to use `"` marks, for example:
 
     ```powershell
-    python "C:\My Projects\Stream\final_compiler.py" "C:\My Projects\Stream\my program.stream"
+    python "C:\My Projects\Stream\compiler.py" "C:\My Projects\Stream\my program.stream"
     ```
 
 ### Interpretation
