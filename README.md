@@ -36,7 +36,7 @@ def navigate_dict -> str (value: int) {
   new_value = values.value:int; return new_value
 }
 
-return navigate_dict(1)
+return navigate_dict(1)   # Returns 'a'
 ```
 
 ## Getting Started (Temporary Instructions)
