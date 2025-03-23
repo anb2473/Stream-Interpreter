@@ -12,7 +12,7 @@ Stream is a new, flexible, and portable multi-paradigm programming language desi
 
 ## Stream Syntax Examples
 
-# This is a comment
+\# This is a comment
 
 let x: int = 0  # Define an integer variable x
 y = 'a'        # Define a character variable y
