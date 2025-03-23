@@ -16,7 +16,7 @@ If you discover a new security vulnerability, please report it responsibly.
 
 To report a vulnerability, please use the following method:
 
-Send an email to streamissues@gmail.com.
+Send an email to streamissues@gmail.com, put the issue in the Private Security Issue section, or, if the issue is not critical, feel free to simply put it in the Issues section.
 
 * If the vulnerability is critical, please begin the email subject with "CRITICAL" so that we can prioritize your issue.
 
