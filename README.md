@@ -19,9 +19,11 @@ y = 'a';
 
 if y == 'a' {
   return 1;
-} elif y == 'b' {
+}
+elif y == 'b' {
   return 2;
-} else {
+}
+else {
   let check = if not x == 3;
   while check {
     x = x + 1;
