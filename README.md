@@ -11,31 +11,31 @@ Stream is a new, flexible, and portable multi-paradigm programming language desi
 * **Python-Powered:** Built using Python for rapid iteration and development.
 
 ## Stream Syntax Examples
-```stream
-# This is a <span style="color: gray;">comment</span>
+<pre>
+<span style="color: gray;"># This is a comment</span>
 
-<span style="color: blue;">let</span> <span style="color: green;">x</span>: <span style="color: blue;">int</span> = <span style="color: darkred;">0</span>;  <span style="color: gray;"># Define an integer variable x</span>
-<span style="color: green;">y</span> = <span style="color: brown;">'a'</span>;           <span style="color: gray;"># Define a character variable y</span>
+<span style="color: blue;">let</span> <span style="color: green;">x</span>: <span style="color: blue;">int</span> = <span style="color: darkred;">0</span>;
+<span style="color: green;">y</span> = <span style="color: brown;">'a'</span>;
 
 <span style="color: blue;">if</span> <span style="color: green;">y</span> == <span style="color: brown;">'a'</span> {
   <span style="color: blue;">return</span> <span style="color: darkred;">1</span>;
 } <span style="color: blue;">elif</span> <span style="color: green;">y</span> == <span style="color: brown;">'b'</span> {
   <span style="color: blue;">return</span> <span style="color: darkred;">2</span>;
 } <span style="color: blue;">else</span> {
-  <span style="color: blue;">let</span> <span style="color: green;">check</span> = <span style="color: blue;">if</span> <span style="color: blue;">not</span> <span style="color: green;">x</span> == <span style="color: darkred;">3</span>; <span style="color: gray;"># Define a boolean variable 'check'</span>
-  <span style="color: blue;">while</span> <span style="color: green;">check</span> {          <span style="color: gray;"># Execute code while check is true</span>
-    <span style="color: green;">x</span> = <span style="color: green;">x</span> + <span style="color: darkred;">1</span>;        <span style="color: gray;"># Increment x</span>
-    <span style="color: green;">check</span> = <span style="color: blue;">if</span> <span style="color: blue;">not</span> <span style="color: green;">x</span> == <span style="color: darkred;">3</span>;    <span style="color: gray;"># Recalculate check</span>
+  <span style="color: blue;">let</span> <span style="color: green;">check</span> = <span style="color: blue;">if</span> <span style="color: blue;">not</span> <span style="color: green;">x</span> == <span style="color: darkred;">3</span>;
+  <span style="color: blue;">while</span> <span style="color: green;">check</span> {
+    <span style="color: green;">x</span> = <span style="color: green;">x</span> + <span style="color: darkred;">1</span>;
+    <span style="color: green;">check</span> = <span style="color: blue;">if</span> <span style="color: blue;">not</span> <span style="color: green;">x</span> == <span style="color: darkred;">3</span>;
   }
 }
 
-<span style="color: blue;">def</span> <span style="color: green;">navigate_dict</span> -> <span style="color: blue;">str</span> (<span style="color: green;">value</span>: <span style="color: blue;">int</span>) { <span style="color: gray;"># Define a function 'navigate_dict'</span>
-  <span style="color: green;">values</span> = {<span style="color: darkred;">1</span>: <span style="color: brown;">'a'</span>, <span style="color: darkred;">2</span>: <span style="color: brown;">'b'</span>, <span style="color: darkred;">3</span>: <span style="color: brown;">'c'</span>};      <span style="color: gray;"># Define a dictionary</span>
-  <span style="color: green;">new_value</span> = <span style="color: green;">values</span>.<span style="color: green;">value</span>; <span style="color: blue;">return</span> <span style="color: green;">new_value</span>; <span style="color: gray;"># Access dictionary value and return</span>
+<span style="color: blue;">def</span> <span style="color: green;">navigate_dict</span> -> <span style="color: blue;">str</span> (<span style="color: green;">value</span>: <span style="color: blue;">int</span>) {
+  <span style="color: green;">values</span> = {<span style="color: darkred;">1</span>: <span style="color: brown;">'a'</span>, <span style="color: darkred;">2</span>: <span style="color: brown;">'b'</span>, <span style="color: darkred;">3</span>: <span style="color: brown;">'c'</span>};
+  <span style="color: green;">new_value</span> = <span style="color: green;">values</span>[<span style="color: green;">value</span>]; <span style="color: blue;">return</span> <span style="color: green;">new_value</span>;
 }
 
-<span style="color: blue;">return</span> <span style="color: green;">navigate_dict</span>();
-```
+<span style="color: blue;">return</span> <span style="color: green;">navigate_dict</span>(<span style="color: darkred;">1</span>);
+</pre>
 
 ## Getting Started (Temporary Instructions)
 
