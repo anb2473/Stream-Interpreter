@@ -19,6 +19,10 @@ Stream is a new, flexible, and portable multi-paradigm programming language desi
 
 **Note:** We are actively developing an installer to simplify this process.
 
+### THE FOLLOWING INFORMATION IS FOR THE NEWEST MODEL OF STREAM (v1.0.0-alpha)
+
+Please go to our wiki for more detailed install information on specific releases.
+
 1.  **Install Python:** Download and install Python from (python.org/downloads).
 2.  **Locate Compiler and Interpreter:** Find the `compiler.py` and `interpreter.py` files within the cloned repository.
 
