@@ -11,7 +11,7 @@ Stream is a new, flexible, and portable multi-paradigm programming language desi
 * **Python-Powered:** Built using Python for rapid iteration and development.
 
 ## Stream Syntax Examples
-```python
+```js
 # This is a comment
 
 let x: int = 0;
