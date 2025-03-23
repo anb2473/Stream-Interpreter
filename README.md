@@ -11,33 +11,9 @@ Stream is a new, flexible, and portable multi-paradigm programming language desi
 * **Python-Powered:** Built using Python for rapid iteration and development.
 
 ## Stream Syntax Examples
-```python
-# This is a comment
 
-let x: int = 0;   # Semi colons are fully optional
-y = 'c'
-
-if y:str == 'a':char {
-  return 1
-}
-elif y:str == 'b':char {
-  return 2
-}
-else {
-  let check = if not x:int == 3:int;
-  while check {
-    x = x + 1
-    check = if not x:int == 3:int
-  }
-}
-
-def navigate_dict -> str (value: int) {
-  values = {1: 'a', 2: 'b', 3: 'c'}
-  new_value = values.value:int; return new_value
-}
-
-return navigate_dict(1)   # Returns 'a'
-```
+* Check out our wiki for information on the language features and syntax.
+* Please try to run our test program in the `TEST.md` file. If you do not get the same output, please reach out in the Issues section.
 
 ## Getting Started (Temporary Instructions)
 
