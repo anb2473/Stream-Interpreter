@@ -15,28 +15,28 @@ Stream is a new, flexible, and portable multi-paradigm programming language desi
 # This is a comment
 
 let x: int = 0;
-y = 'a';
+y = 'a'
 
 if y == 'a' {
-  return 1;
+  return 1
 }
 elif y == 'b' {
-  return 2;
+  return 2
 }
 else {
   let check = if not x == 3;
   while check {
-    x = x + 1;
-    check = if not x == 3;
+    x = x + 1
+    check = if not x == 3
   }
 }
 
 def navigate_dict -> str (value: int) {
-  values = {1: 'a', 2: 'b', 3: 'c'};
-  new_value = values[value]; return new_value;
+  values = {1: 'a', 2: 'b', 3: 'c'}
+  new_value = values[value]; return new_value
 }
 
-return navigate_dict(1);
+return navigate_dict(1)
 ```
 
 ## Getting Started (Temporary Instructions)
