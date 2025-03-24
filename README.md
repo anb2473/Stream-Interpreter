@@ -2,6 +2,8 @@
 
 Stream is a new, flexible, and portable multi-paradigm programming language designed for rapid development and ease of use. Stream aims to simplify complex programming tasks with a clean, functional syntax and robust cross-platform capabilities.
 
+**PLEASE GO TO OUR WIKI FOR MORE INFORMATION ON LANGUAGE SYNTAX AND INSTALLATION FOR YOUR SPECIFIC VERSION**
+
 ## What is Stream?
 
 * **Ease of Development:** Stream prioritizes a straightforward development experience.
