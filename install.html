@@ -82,21 +82,21 @@
 
     ```powershell
     function compile_stream {
-    param(
-    [Parameter(Mandatory = $true)]
-    [string]$file
-    )
-    python "[PATH_TO_COMPILER]" $file
+      param(
+        [Parameter(Mandatory = $true)]
+        [string]$file
+      )
+      python "[PATH_TO_COMPILER]" $file
     }
 
     function interpret_stream {
-    param(
-    [Parameter(Mandatory = $true)]
-    [string]$file,
-    [string]$type,
-    [string]$json
-    )
-    python "[PATH_TO_INTERPRETER]" $file $type $json
+      param(
+        [Parameter(Mandatory = $true)]
+        [string]$file,
+        [string]$type,
+        [string]$json
+      )
+      python "[PATH_TO_INTERPRETER]" $file $type $json
     }
     ```
 
@@ -113,8 +113,7 @@
     * If you wish to contribute to the project, please read our `CONTRIBUTING.md` file. (https://github.com/anb2473/Stream-Compiler/blob/main/CONTRIBUTING.md)
     * For questions on licensing our software, all software is currently licensed under the unlicense. Please read our `UNLICENSE` file for more details. (https://github.com/anb2473/Stream-Compiler/blob/main/UNLICENSE)
 
-    ##
-    For More Details
+    ## For More Details
 
     Please read our GitHub wiki page (https://github.com/anb2473/Stream-Compiler/wiki) for more details on language
     syntax, next steps, installation, or any other issues.
