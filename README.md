@@ -1,6 +1,6 @@
 # Stream Website
 
-This branch contains all the Stream website code.
+This branch contains all the Stream website code. (stream-compiler.netlify.app)
 
 ### Contributing and Security
 
