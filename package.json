@@ -1,0 +1,10 @@
+{
+  "name": "Stream-Compiler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "md_html.min.js",
+  "scripts": {
+    "test": "echo \"Error: no tets.html specified\" && exit 1"
+  },
+  "private": true
+}

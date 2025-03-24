@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.12.0/styles/atom-one-light.min.css" />
+  <link rel="stylesheet" href="https://cdn.bootcss.com/github-markdown-css/2.8.0/github-markdown.min.css" />
+  <link rel="stylesheet" href="markdown-dark.css">
+
+  <link rel="stylesheet" href="what.css">
+  <script src="index.js"></script>
+  <title>Stream</title>
+</head>
+
+<body>
+
+<header>
+  <h1>Stream</h1>
+  <p>How to install Stream</p>
+  <div class="links">
+    <a href="home.html">Home</a>
+    <a href="what.html">What it is</a>
+    <a href="reach.html">Contact us</a>
+  </div>
+</header>
+
+<div class="container" style="padding: 50px;">
+  <template type="markdown">
+    ## Getting Started (Temporary Instructions, these work for all operating systems)
+
+    **Note:** We are actively developing an installer to simplify this process.
+
+    ### THE FOLLOWING INFORMATION IS FOR THE NEWEST MODEL OF STREAM (v1.0.0-alpha)
+
+    Please go to our GitHub wiki page (https://github.com/anb2473/Stream-Compiler/wiki) for more detailed install
+    information on specific releases.
+
+    1.
+    **Install Python:** Download and install Python from (python.org/downloads).
+    2.
+    **Locate Compiler and Interpreter:** Find the `compiler.py` and `interpreter.py` files within the cloned
+    repository.
+
+    ### Compilation
+
+    * The Stream compiler takes a `.stream` file as input and produces a compiled file with a `.fsl` extension.
+    * Open your terminal or command prompt.
+    * Run the compiler using:
+
+    ```powershell
+    python "[PATH_TO_COMPILER]" "[PATH_TO_YOUR_STREAM_FILE.stream]"
+    ```
+
+    * **Important:** Remember to use `"` marks, for example:
+
+    ```powershell
+    python "C:\My Projects\Stream\compiler.py" "C:\My Projects\Stream\my program.stream"
+    ```
+
+    ### Interpretation
+
+    * The Stream interpreter executes the compiled file.
+    * After compilation, run the interpreter using:
+
+    ```powershell
+    python "[PATH_TO_INTERPRETER]" "[PATH_TO_COMPILED_FILE.fsl]" "[RETURN_TYPE]" "{}"
+    ```
+
+    * **Important:** Remember to use `"` marks.
+    * **Note:** The `[RETURN_TYPE]` specifies the expected return type (e.g., `int`, `str`). The `{}` represents JSON parameters, which are typically empty for basic execution.
+
+    ## Simplified Commands (Windows PowerShell ONLY)
+
+    To make this easier on Windows, you can add functions to your PowerShell profile:
+
+    1. **Open your PowerShell profile:**
+      * Run: `notepad $PROFILE`
+      * If that doesn't work, run `New-Item -Path $PROFILE -Type File -Force` first.
+    2. **Add these functions to your profile:**
+
+    ```powershell
+    function compile_stream {
+    param(
+    [Parameter(Mandatory = $true)]
+    [string]$file
+    )
+    python "[PATH_TO_COMPILER]" $file
+    }
+
+    function interpret_stream {
+    param(
+    [Parameter(Mandatory = $true)]
+    [string]$file,
+    [string]$type,
+    [string]$json
+    )
+    python "[PATH_TO_INTERPRETER]" $file $type $json
+    }
+    ```
+
+    Now, you can use:
+
+    * `compile_stream " [PATH_TO_STREAM_FILE]"`
+    * `interpret_stream " [PATH_TO_COMPILED_FILE]" "[RETURN_TYPE]" "{}"`
+
+    ## Reach Out
+
+    * If you wish to reach out to us, please feel free to contact us at our email, streamissues@gmail.com.
+    * If you wish to report an issue or bug, please report it in our GitHub Issues. (https://github.com/anb2473/Stream-Compiler/issues)
+    * For any major security concerns, please read our instructions in the `SECURITY.md` file. (https://github.com/anb2473/Stream-Compiler/blob/main/SECURITY.md) Please **DO NOT** post major security issues in the Issues page or send them publicly until the issue has been resolved.
+    * If you wish to contribute to the project, please read our `CONTRIBUTING.md` file. (https://github.com/anb2473/Stream-Compiler/blob/main/CONTRIBUTING.md)
+    * For questions on licensing our software, all software is currently licensed under the unlicense. Please read our `UNLICENSE` file for more details. (https://github.com/anb2473/Stream-Compiler/blob/main/UNLICENSE)
+
+    ##
+    For More Details
+
+    Please read our GitHub wiki page (https://github.com/anb2473/Stream-Compiler/wiki) for more details on language
+    syntax, next steps, installation, or any other issues.
+
+  </template>
+</div>
+
+<footer>
+  <div class="links">
+    <a href="https://github.com/anb2473/Stream-Compiler">Github</a>
+    <a href="https://gitlab.com/anb24731/Stream-Compiler/-/tree/main">Gitlab</a>
+    <a href="mailto:streamissues@gmail.com">Reach Out</a>
+  </div>
+
+  <p>Stream Compiler - Public Domain (Unlicense)</p>
+</footer>
+
+<script src="https://cdn.bootcss.com/marked/0.3.6/marked.min.js" charset="utf-8"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js" charset="utf-8"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/languages/javascript.min.js" charset="utf-8"></script>
+<script src="md_html.min.js" charset="utf-8"></script>
+<script type="text/javascript">
+  markedInHtml.init()
+</script>
+
+</body>
+
+</html>

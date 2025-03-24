@@ -1,0 +1,55 @@
+/* General text color */
+.markdown-body {
+    color: #f0f0f0; /* Light gray or off-white */
+}
+
+/* Headings */
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+    color: #ffffff; /* White */
+}
+
+/* Links */
+.markdown-body a {
+    color: #58a6ff; /* A lighter blue for links */
+}
+
+.markdown-body a:hover {
+    color: #8ccbff; /* A lighter shade on hover */
+}
+
+/* Blockquotes */
+.markdown-body blockquote {
+    border-left-color: #888888; /* Adjust the blockquote line color */
+    color: #cccccc; /* Adjust blockquote text color */
+}
+
+/* Code blocks */
+.markdown-body pre {
+    background-color: #222222; /* Darker background for code */
+    color: #ffffff; /* White text for code */
+}
+
+.markdown-body code {
+    background-color: #333333; /* Slightly darker background for inline code */
+    color: #ffffff; /* White text for inline code */
+}
+
+/* Horizontal rules */
+.markdown-body hr {
+    border-color: #666666; /* Adjust horizontal rule color */
+}
+
+/* Tables */
+.markdown-body th,
+.markdown-body td {
+    border-color: #555555; /* Adjust table border color */
+}
+
+.markdown-body th {
+    color: #dddddd; /* Adjust table header text color */
+}
