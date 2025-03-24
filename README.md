@@ -2,7 +2,7 @@
 
 Stream is a new, flexible, and portable multi-paradigm programming language designed for rapid development and ease of use. Stream aims to simplify complex programming tasks with a clean, functional syntax and robust cross-platform capabilities.
 
-**PLEASE GO TO OUR WIKI FOR MORE INFORMATION ON LANGUAGE SYNTAX AND INSTALLATION FOR YOUR SPECIFIC VERSION**
+**PLEASE GO TO OUR WIKI FOR MORE INFORMATION ON LANGUAGE SYNTAX AND INSTALLATION FOR YOUR SPECIFIC VERSION, OR HEAD TO OUR WEBSITE (stream-compiler.netlify.app)**
 
 ## What is Stream?
 
