@@ -30,12 +30,12 @@ Please go to our wiki for more detailed install information on specific releases
 
 ### Compilation
 
-* The Stream compiler takes a `.stream` file as input and produces a compiled file.
+* The Stream compiler takes a `.stream` file as input and produces a compiled file with a `.fsl` extension.
 * Open your terminal or command prompt.
 * Run the compiler using:
 
     ```powershell
-    python "[PATH_TO_COMPILER]" "[PATH_TO_YOUR_STREAM_FILE]"
+    python "[PATH_TO_COMPILER]" "[PATH_TO_YOUR_STREAM_FILE.stream]"
     ```
 
 * **Important:** Remember to use `"` marks, for example:
@@ -50,7 +50,7 @@ Please go to our wiki for more detailed install information on specific releases
 * After compilation, run the interpreter using:
 
     ```powershell
-    python "[PATH_TO_INTERPRETER]" "[PATH_TO_COMPILED_FILE]" "[RETURN_TYPE]" "{}"
+    python "[PATH_TO_INTERPRETER]" "[PATH_TO_COMPILED_FILE.fsl]" "[RETURN_TYPE]" "{}"
     ```
 
 * **Important:** Remember to use `"` marks.
