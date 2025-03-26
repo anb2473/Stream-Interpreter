@@ -11,6 +11,7 @@ Software versions currently being maintained for security issues:
 |   1.1.0         |   :x:                  |
 |   1.2.0         |   :white_check_mark:   |
 |   1.2.0+        |   :white_check_mark:   |
+|   1.2.0++        |   :white_check_mark:   |
 
 **Note:** We plan to consistently address security concerns in certain legacy models, so deprecated legacy features should not pose a significant security risk. If you wish to request support for a legacy version or report an issue on an unsupported version, please feel free to open a new issue in the repository's "Issues" section.
 
