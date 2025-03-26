@@ -21,7 +21,7 @@ Stream is a new, flexible, and portable multi-paradigm programming language desi
 
 **Note:** We are actively developing an installer to simplify this process.
 
-### THE FOLLOWING INFORMATION IS FOR THE NEWEST MODEL OF STREAM (v1.0.0-alpha)
+### THE FOLLOWING INFORMATION IS FOR THE NEWEST MODEL OF STREAM (v1.2.0)
 
 Please go to our wiki for more detailed install information on specific releases.
 
