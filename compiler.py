@@ -205,6 +205,9 @@ class App(threading.Thread):
     def get_type(self, var: str, line_num):
         var = var.strip()
         if len(var) != 0:
+            if var.__contains__('.'):
+                obj = self.local[var.split('.')[0]]
+                return obj.split('>')[2].strip()
             if var in self.local:
                 return self.local[var]
             if var.__contains__('*') or var.__contains__('/') or var.__contains__('+') or var.__contains__('-') \
