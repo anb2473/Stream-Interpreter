@@ -56,12 +56,8 @@ BG_BRIGHT_WHITE = "\033[107m"
 start_time = time.time()
 
 
-# TODO: ADD MORE AUTOMATED TYPE GENERATION      <---- TYPE INSERTERS ON VALUES (NEW FUNC)
+# TODO: BETTER AUTOMATED TYPE FINDING FOR VARIABLE DECLARATIONS (CANNOT DETERMINE TYPE OF 'values.value:int')
 # TODO: INTEGRATE SYSTEMS FOR CALLING PYTHON FILES AND MORE LANGUAGES
-# TODO: ADD MORE FEATURES FOR CONDITIONAL STATEMENTS (<= between str and int)
-# TODO: ADD MORE FEATURES FOR EXPRESSIONS
-# TODO: INTEGRATE ERROR HANDLING
-# TODO: IMPLEMENT GENERICS
 # TODO: BUILD SEMANTIC ANALYZER / INTEGRATE SEMANTIC ANALYZER
 # TODO: MAKE COMPILER MORE FLEXIBLE WITH SEMANTIC DIFFERENCES
 # TODO: MAKE CODE MORE EFFICIENT
@@ -342,6 +338,11 @@ class App(threading.Thread):
                         print(
                             f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_YELLOW}No end braces:'
                             f'{RESET} {ITALIC}\'{line}\'{RESET}, {FG_BRIGHT_BLUE}line {i}{RESET}')
+                    if not new_line.__contains__('('):
+                        new_line = f'{new_line.split('{')[0].strip()} ()'
+                    for param_pair in new_line.split('(')[1].split(')')[0].split(','):
+                        param, param_type = param_pair.split(':')
+                        self.local[param.strip()] = param_type.strip()
                     # ENSURE LINE CONTAINS A RETURN TYPE
                     if not new_line.__contains__('->'):
                         # INSERT VOID RETURN
@@ -430,6 +431,10 @@ class App(threading.Thread):
                             f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_YELLOW}'
                             f'No equals statement:{RESET} {ITALIC}\'{line}\'{RESET}'
                             f', {FG_BRIGHT_BLUE}line {i}{RESET}')
+                    if line.__contains__('.'):
+                        split_line = new_line.split('=')[1].split('.')[1].strip()
+                        if not split_line.__contains__(':'):
+                            new_line = f'{new_line.rstrip()}:{self.get_type(split_line, i)}'
                     if new_line.__contains__('if'):
                         upper_checks = ['and', 'or']
                         tags = ['not']
