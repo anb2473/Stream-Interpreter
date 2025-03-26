@@ -281,6 +281,39 @@ class App(threading.Thread):
 
                 if new_line.startswith('if') or new_line.startswith('elif') or new_line.startswith('while') \
                         or new_line.startswith('else'):
+
+                    if (new_line.startswith('while') and new_line.__contains__('=')) or \
+                            not new_line.startswith('while'):
+                        upper_checks = ['and', 'or']
+                        tags = ['not']
+
+                        ret = ''
+                        if new_line.startswith('if'):
+                            split_line = line[3:].split('{')[0].split(' ')
+                            ret = 'if '
+                        elif new_line.startswith('while'):
+                            split_line = line[6:].split('{')[0].split('=', 1)[1][3:].split(' ')
+                            ret = f'while {line[6:].split('{')[0].split('=', 1)[0].strip()} = if '
+                        elif new_line.startswith('else'):
+                            split_line = line[5:].split('{')[0].split(' ')
+                            ret = 'else '
+                        elif new_line.startswith('elif'):
+                            split_line = line[5:].split('{')[0].split(' ')
+                            ret = 'elif '
+                        for part in split_line:
+                            if part != '':
+                                if not part.__contains__('=') and part not in upper_checks and \
+                                        part not in tags and not part.__contains__(':'):
+                                    ret += f'{part.strip()}:{self.get_type(part, i)} '
+                                    print(
+                                        f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_YELLOW}'
+                                        f'Typeless conditional object: \'{part}\', {RESET} {ITALIC}\'{line}\'{RESET}'
+                                        f', {FG_BRIGHT_BLUE}line {i}{RESET}')
+                                else:
+                                    ret += f'{part.strip()} '
+
+                        new_line = f'{ret}{{'
+
                     if not new_line.__contains__('{'):
                         new_line += '{'
                         print(
@@ -382,6 +415,27 @@ class App(threading.Thread):
                             f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_YELLOW}'
                             f'No equals statement:{RESET} {ITALIC}\'{line}\'{RESET}'
                             f', {FG_BRIGHT_BLUE}line {i}{RESET}')
+                    if new_line.__contains__('if'):
+                        upper_checks = ['and', 'or']
+                        tags = ['not']
+
+                        split_line = new_line.split('=', 1)[1][3:].strip().split(' ')
+                        ret = f'let {new_line.split('=', 1)[0].strip()} = '
+
+                        for part in split_line:
+                            if part != '':
+                                if not part.__contains__('=') and part not in upper_checks and \
+                                        part not in tags and not part.__contains__(':'):
+                                    ret += f'{part.strip()}:{self.get_type(part, i)} '
+                                    print(
+                                        f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_YELLOW}'
+                                        f'Typeless conditional object: \'{part}\', {RESET} {ITALIC}\'{line}\'{RESET}'
+                                        f', {FG_BRIGHT_BLUE}line {i}{RESET}')
+                                else:
+                                    ret += f'{part.strip()} '
+
+                        new_line = ret
+
                     if line[-1] in ['*', '/', '+', '-']:
                         print(
                             f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_YELLOW}'
