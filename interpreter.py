@@ -122,7 +122,7 @@ def handler(f: str, return_type: str, params: dict):
 
 
 def custom_split(expression):
-    operators = ["**", "//", "+", "-", "*", "/"]  # List of operators
+    operators = ['**', '//', '+', '-', '*', '/', '~', '$', '@', '&']  # List of operators
     result = ['=']
     current = ""
     i = 0
@@ -383,7 +383,7 @@ class App:
             case default:
                 final = None
 
-        operations = ['+', '-', '*', '/', '//', '**', '=']
+        operations = ['+', '-', '*', '/', '//', '**', '=', '%', '@', '&']
 
         current_operation = ''
 
@@ -391,8 +391,22 @@ class App:
             if item in operations:
                 current_operation = item
                 continue
+            if item == '~':
+                final = math.floor(final)
+                continue
+            if item == '$':
+                try:
+                    final = len(final)
+                except TypeError:
+                    print(
+                        f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: '
+                        f'{FG_BRIGHT_RED}Invalid opperation:{RESET}'
+                        f' cannot take the length of {FG_BRIGHT_BLUE}{final}{RESET}, invalid type ({type(final)})'
+                        f', {FG_BRIGHT_BLUE}line {line_num + 1}{RESET}')
+                    sys.exit(1)
+                continue
             if var_type == 'int':
-                true_item = self.evaluate(item, 'int', local, line_num)
+                true_item = self.evaluate(item, 'int' if not item.__contains__('.') else 'float', local, line_num)
                 match current_operation:
                     case '+':
                         final += true_item
@@ -408,6 +422,8 @@ class App:
                         final = math.pow(final, true_item)
                     case '=':
                         final = true_item
+                    case '%':
+                        final %= true_item
                     case default:
                         print(
                             f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: '
@@ -434,10 +450,12 @@ class App:
                 match current_operation:
                     case '+':
                         final = final + self.evaluate(item.split(':')[0], 'list', local, line_num)
-                    case '-':
-                        final = final[:self.evaluate(item, 'int', local, line_num)]
                     case '=':
                         final = self.evaluate(item, 'list', local, line_num)
+                    case '@':
+                        final = final[self.evaluate(item, 'list', local, line_num):]
+                    case '&':
+                        final = final[:self.evaluate(item, 'list', local, line_num)]
                     case default:
                         print(
                             f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: '
@@ -480,7 +498,10 @@ class App:
         while i < len(split_file):
             line = split_file[i]
             if line.startswith('let'):
-                if line.__contains__('+') or line.__contains__('-') or line.__contains__('*') or line.__contains__('/'):
+                sub_line = line.split('=')[1]
+                if sub_line.__contains__('+') or sub_line.__contains__('-') or sub_line.__contains__('*') or \
+                        sub_line.__contains__('/') or sub_line.__contains__('@') or sub_line.__contains__('&') or \
+                        sub_line.__contains__('$') or sub_line.__contains__('~'):
                     key = line.split('=', 1)[0].split(':', 1)[0][4:].strip()
                     local[key] = (self.evaluate_multi(line.split('=', 1)[1].strip(),
                                                       line.split('=', 1)[0].split(':', 1)[1].strip(), local, i))
@@ -513,12 +534,12 @@ class App:
                 return self.evaluate(line[7:].strip(), return_type, local, i)
             i += 1
         print(
+            f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_YELLOW}'
+            f'No return statement{RESET}')
+        print(
             f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {FG_BRIGHT_GREEN}'
             f'Program finished with local data{RESET}:'
             f'{FG_BRIGHT_BLUE} local data={local}{RESET}')
-        print(
-            f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_YELLOW}'
-            f'No return statement{RESET}')
         return None
 
 

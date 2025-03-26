@@ -211,6 +211,21 @@ class App(threading.Thread):
         if len(var) != 0:
             if var in self.local:
                 return self.local[var]
+            if var.__contains__('*') or var.__contains__('/') or var.__contains__('+') or var.__contains__('-') \
+                    or var.__contains__('@') or var.__contains__('~') or var.__contains__('&') or var.__contains__('%'):
+                operators = ['+', '-', '*', '/', '~', '$', '@', '&']  # List of operators
+                i = 0
+
+                true_var = ''
+
+                while i < len(var):
+                    if var[i] in operators:  # HANDLE SINGLE LINE OPERATORS
+                        break
+                    else:
+                        true_var += var[i]
+                    i += 1
+
+                return self.get_type(true_var, line_num)
             match var[0]:
                 case '\'':  # LINE STARTS WITH CHAR TYPE QUOTE
                     if len(var.replace('\'', '')) > 1:
