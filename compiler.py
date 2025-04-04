@@ -251,7 +251,7 @@ class App(threading.Thread):
                         return 'float'
                     except ValueError:
                         pass
-        return 'void'
+        return 'obj'
 
     def run(self):
         if self.ext == '.stream':  # CORRECT FILE FOR COMPILATION IF FILE IS A HIGH LEVEL STREAM APPLICATION
@@ -365,8 +365,8 @@ class App(threading.Thread):
                             f'Return without statement:{RESET} {ITALIC}\'{line}\'{RESET}'
                             f', {FG_BRIGHT_BLUE}line {i}{RESET}')
                         new_line = f'{new_line.strip()} void'
-                    if ((new_line.strip().endswith(')') and new_line.__contains__('('))
-                            and not new_line.__contains__('exec')):
+                    if new_line.strip().__contains__(')') and new_line.__contains__('(') \
+                            and not new_line.__contains__('exec'):
                         new_line = f'return exec {new_line[7:]}'
                         print(
                             f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_YELLOW}'
@@ -412,10 +412,18 @@ class App(threading.Thread):
                             f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_YELLOW}'
                             f'No variable type notation:{RESET} {ITALIC}\'{line}\'{RESET}'
                             f', {FG_BRIGHT_BLUE}line {i}{RESET}')
+                if new_line.strip().__contains__(')') and new_line.__contains__('(') \
+                        and not new_line.__contains__('exec') and not new_line.startswith('let') \
+                        and not new_line.startswith('prototype'):
+                    new_line = f'exec {new_line}'
+                    print(
+                        f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_YELLOW}'
+                        f'No exec tag:{RESET} {ITALIC}\'{line}\'{RESET}'
+                        f', {FG_BRIGHT_BLUE}line {i}{RESET}')
                 # IF LINE EXECUTES FUNCTION BUT DOES NOT CONTAIN AN EQUALS STATEMENT INSERT VOID STATEMENT
                 if (new_line.__contains__('exec') and not re.search(r"(?<!=)=(?!=)", new_line)
                         and not line.startswith('return')):
-                    new_line = f'let _:void = {new_line}'
+                    new_line = f'let _: obj = {new_line}'
                     print(
                         f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_YELLOW}'
                         f'No let statement:{RESET} {ITALIC}\'{line}\'{RESET}'
@@ -639,7 +647,7 @@ class App(threading.Thread):
 
             elif line.startswith('while'):
                 depth = 0
-                jump_num = 0
+                jump_num = 2
                 # CALCULATE DISTANCE TO STATEMENT END
                 for sub_line in split_file[index:]:
                     if sub_line.startswith('if') or sub_line.startswith('else') or sub_line.startswith(
@@ -671,9 +679,9 @@ class App(threading.Thread):
                     # INSERT RETURN STATEMENT IF NO RETURN STATEMENT EXISTS
                     if index - 1 >= 0 and not split_file[index - 1].startswith('return'):
                         new_file += f'return void\n'
-                elif in_while and general_depth == 0:
+                elif in_while:
                     # INSERT JUMP TO WHILE LOOP START IF CONDITIONAL STILL TRUE
-                    new_line = f'do {while_var} {-while_jump_num.pop()}'
+                    new_line = f'check = if not {while_var}\ndo check {-while_jump_num.pop()}'
                 else:
                     new_line = ''
                 in_foo = False

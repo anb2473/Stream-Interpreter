@@ -299,7 +299,7 @@ class App:
             param_build = {}
             index = 0
 
-            if not self.calls.__contains__(value[5:].split('(')[0]):
+            if not self.calls.__contains__(value[5:].split('(')[0].strip()):
                 print(f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_RED}'
                       f'Function Not Found:{RESET} '
                       f'{ITALIC}\'{value[5:].split('(')[0]}\'{RESET}, registered calls: {self.calls}, {FG_BRIGHT_BLUE}'
@@ -322,7 +322,7 @@ class App:
                 f'{FG_BRIGHT_BLUE}line {line_num + 1}{RESET}\n')
 
             return result
-        elif value.__contains__('.') and not value.split('.')[0].isdigit():
+        if value.__contains__('.') and not value.split('.')[0].isdigit():
             try:
                 obj = local[value.split('.')[0]]
                 try:
@@ -356,39 +356,42 @@ class App:
                       f'{local}){RESET}, {FG_BRIGHT_BLUE}line {line_num + 1}{RESET}')
                 sys.exit(1)
             return value
-        elif value in local:
+        if value in local:
             return local[value]
-        elif var_type == 'int':
-            try:
-                return int(value)
-            except ValueError:
-                print(f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_RED}Value Error:{RESET} '
-                      f'{ITALIC}\'{value}\'{RESET} is not an integer, {FG_BRIGHT_BLUE}line {line_num + 1}{RESET}')
-                sys.exit(1)
-        elif var_type == 'float':
-            try:
-                return float(value)
-            except ValueError:
-                print(f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_RED}Value Error:{RESET} '
-                      f'{ITALIC}\'{value}\'{RESET} is not a float, {FG_BRIGHT_BLUE}line {line_num + 1}{RESET}')
-                sys.exit(1)
-        elif var_type == 'str':
-            return value.replace('"', '')
-        elif var_type == 'char':
-            value = value.replace('\'', '')
-            return value
-        elif var_type == 'bool':
-            if value.startswith('if'):
-                return self.check_conditional(value, local, line_num)
-            else:
+        match var_type:
+            case 'obj':
+                return value
+            case 'int':
                 try:
-                    return bool(value.capitalize())
+                    return int(value)
                 except ValueError:
-                    print(f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_RED}Value Error:'
-                          f'{RESET} {ITALIC}\'{value}\'{RESET} is not a boolean, '
-                          f'{FG_BRIGHT_BLUE}line {line_num + 1}{RESET}')
+                    print(f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_RED}Value Error:{RESET} '
+                          f'{ITALIC}\'{value}\'{RESET} is not an integer, {FG_BRIGHT_BLUE}line {line_num + 1}{RESET}')
                     sys.exit(1)
-        elif var_type.__contains__('>'):
+            case 'float':
+                try:
+                    return float(value)
+                except ValueError:
+                    print(f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_RED}Value Error:{RESET} '
+                          f'{ITALIC}\'{value}\'{RESET} is not a float, {FG_BRIGHT_BLUE}line {line_num + 1}{RESET}')
+                    sys.exit(1)
+            case 'str':
+                return value.replace('"', '')
+            case 'char':
+                value = value.replace('\'', '')
+                return value
+            case 'bool':
+                if value.startswith('if'):
+                    return self.check_conditional(value, local, line_num)
+                else:
+                    try:
+                        return True if value.capitalize() == 'True' else False
+                    except ValueError:
+                        print(f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_RED}Value Error:'
+                              f'{RESET} {ITALIC}\'{value}\'{RESET} is not a boolean, '
+                              f'{FG_BRIGHT_BLUE}line {line_num + 1}{RESET}')
+                        sys.exit(1)
+        if var_type.__contains__('>'):
             true_type = var_type.split('>')[0].strip()
             if true_type == 'list':
                 return [self.evaluate(item, var_type.split('>')[1].strip(), local, line_num) for item in value
