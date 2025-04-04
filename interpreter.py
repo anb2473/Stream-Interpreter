@@ -1,3 +1,4 @@
+import importlib.util
 import json
 import math
 import os
@@ -62,13 +63,45 @@ def fsl(file: str, type: str, param: dict):
     return app.run(type)
 
 
+def load_module_from_path(filepath: str):
+    """Loads a Python module from a given file path."""
+    try:
+        module_name = os.path.splitext(os.path.basename(filepath))[0]
+        spec = importlib.util.spec_from_file_location(module_name, filepath)
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[module_name] = module
+        spec.loader.exec_module(module)
+        return module
+    except FileNotFoundError:
+        print(f"Error: File not found at '{filepath}'")
+        return None
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        return None
+
+
+def py(filepath: str, type: str, param: dict):
+    """Loads a module and calls its 'main' function."""
+    module = load_module_from_path(filepath)
+    if module:
+        try:
+            main_func = getattr(module, 'main')
+            return main_func(param)
+        except AttributeError:
+            return f"Error: 'main' function not found in '{filepath}'"
+        except Exception as e:
+            return f"An unexpected error occurred during main function call: {e}"
+    else:
+        return "Module could not be loaded"
+
+
 def main():
     # ENSURE ENOUGH ARGUMENTS ARE PASSED
-    if len(sys.argv) < 3:
+    if len(sys.argv) < 4:
         print(f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_RED}Argument error:{RESET} '
               f'Not enough arguments {FG_BRIGHT_BLUE}(Must have 3: file path, return type, parameters){RESET}')
         sys.exit(1)
-    elif len(sys.argv) > 3:
+    elif len(sys.argv) > 4:
         print(f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_YELLOW}'
               f'Too many arguments{RESET} {FG_BRIGHT_BLUE}(Should have 3: file path, return type, parameters){RESET}')
 
