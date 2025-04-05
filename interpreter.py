@@ -6,61 +6,23 @@ import sys
 import time
 
 
-RESET = "\033[0m"       # Resets all formatting to default
-BOLD = "\033[1m"        # Makes text bold
-DIM = "\033[2m"         # Makes text dim/faint
-ITALIC = "\033[3m"      # Makes text italic (not widely supported)
-UNDERLINE = "\033[4m"   # Underlines text
-BLINK = "\033[5m"       # Makes text blink (not widely supported)
-REVERSE = "\033[7m"     # Reverses foreground and background colors
-HIDDEN = "\033[8m"      # Makes text hidden/invisible
+# Define print variables
+RESET = "\033[0m"
+BOLD = "\033[1m"
+ITALIC = "\033[3m"
 
-# Foreground Colors
-FG_BLACK = "\033[30m"
-FG_RED = "\033[31m"
-FG_GREEN = "\033[32m"
-FG_YELLOW = "\033[33m"
-FG_BLUE = "\033[34m"
-FG_MAGENTA = "\033[35m"
-FG_CYAN = "\033[36m"
-FG_WHITE = "\033[37m"
-
-# Bright Foreground Colors
-FG_BRIGHT_BLACK = "\033[90m"
 FG_BRIGHT_RED = "\033[91m"
 FG_BRIGHT_GREEN = "\033[92m"
 FG_BRIGHT_YELLOW = "\033[93m"
 FG_BRIGHT_BLUE = "\033[94m"
-FG_BRIGHT_MAGENTA = "\033[95m"
 FG_BRIGHT_CYAN = "\033[96m"
-FG_BRIGHT_WHITE = "\033[97m"
-
-# Background Colors
-BG_BLACK = "\033[40m"
-BG_RED = "\033[41m"
-BG_GREEN = "\033[42m"
-BG_YELLOW = "\033[43m"
-BG_BLUE = "\033[44m"
-BG_MAGENTA = "\033[45m"
-BG_CYAN = "\033[46m"
-BG_WHITE = "\033[47m"
-
-# Bright Background Colors
-BG_BRIGHT_BLACK = "\033[100m"
-BG_BRIGHT_RED = "\033[101m"
-BG_BRIGHT_GREEN = "\033[102m"
-BG_BRIGHT_YELLOW = "\033[103m"
-BG_BRIGHT_BLUE = "\033[104m"
-BG_BRIGHT_MAGENTA = "\033[105m"
-BG_BRIGHT_CYAN = "\033[106m"
-BG_BRIGHT_WHITE = "\033[107m"
 
 start_time = time.time()
 
 
-def fsl(file: str, type: str, param: dict, verbose):
+def fsl(file: str, return_type: str, param: dict, verbose):
     app = App(file, param, verbose)
-    return app.run(type)
+    return app.run(return_type)
 
 
 def load_module_from_path(filepath: str):
@@ -80,7 +42,7 @@ def load_module_from_path(filepath: str):
         return None
 
 
-def py(filepath: str, type: str, param: dict, verbose):
+def py(filepath: str, _return_type: str, param: dict, _verbose):
     """Loads a module and calls its 'main' function."""
     module = load_module_from_path(filepath)
     if module:
@@ -123,7 +85,8 @@ def main(verbose=False):
     _, ext = os.path.splitext(f)
     # SEARCH EXECUTION PIPELINE FOR PROPER FUNCTION HANDLER FOR FILE TYPE
     print(f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {FG_BRIGHT_GREEN}Successfully executed file{RESET}'
-          f' at \'{f}\': \n{FG_BRIGHT_BLUE}{getattr(__import__(__name__), ext[1:])(f, return_type, params, verbose)}{RESET}')
+          f' at \'{f}\': \n{FG_BRIGHT_BLUE}{getattr(__import__(__name__), ext[1:])(f, return_type, params, verbose)}'
+          f'{RESET}')
 
 
 def read_file(path):
@@ -237,7 +200,8 @@ class App:
             elif part in tags:
                 tag = part
             # PART IS NOT A CHECK TYPE AND CHECK TYPE IS NOT SET (PART IS A CHECK OBJECT)
-            elif check_type is None and not part.__contains__('=') and not part.__contains__('<') and not part.__contains__('>'):
+            elif check_type is None and not part.__contains__('=') and not part.__contains__('<') \
+                    and not part.__contains__('>'):
                 try:
                     check_obj = self.evaluate(part.split(':')[0], part.split(':')[1], local, line_num)
                 except IndexError:
@@ -285,7 +249,7 @@ class App:
                     case '<':
                         try:
                             current = check_obj < self.evaluate(part.split(':')[0], part.split(':')[1], local,
-                                                                 line_num)
+                                                                line_num)
                         except IndexError:
                             print(
                                 f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_RED}'
@@ -296,7 +260,7 @@ class App:
                     case '>':
                         try:
                             current = check_obj > self.evaluate(part.split(':')[0], part.split(':')[1], local,
-                                                                 line_num)
+                                                                line_num)
                         except IndexError:
                             print(
                                 f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_RED}'
@@ -340,7 +304,11 @@ class App:
                     except IndexError:
                         print(f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_RED}'
                               f'Mismatched arguments:{RESET} '
-                              f'{ITALIC}\'{value[5:].split('(')[0].strip()}\' takes in {FG_BRIGHT_BLUE}{str(self.calls[value[5:].split('(')[0]][2]).replace('[', '(').replace(']', ')')}{RESET}, given {FG_BRIGHT_BLUE}{str(value.split('(')[1].split(')')[0].split(',')).replace('[', '(').replace(']', ')')}{RESET} {RESET}, {FG_BRIGHT_BLUE}'
+                              f'{ITALIC}\'{value[5:].split('(')[0].strip()}\' takes in {FG_BRIGHT_BLUE}'
+                              f'{str(self.calls[value[5:].split('(')[0]][2]).replace('[', '(').replace(']', ')')}'
+                              f'{RESET}, given {FG_BRIGHT_BLUE}{str(value.split('(')[1].split(')')[0].split(','))
+                                                                .replace('[', '(').replace(']', ')')}'
+                              f'{RESET} {RESET}, {FG_BRIGHT_BLUE}'
                               f'line {line_num + 1}{RESET}')
                         sys.exit(1)
                     param_build[key.strip()] = self.evaluate(param.strip(), param_type.strip(), local, line_num)
@@ -368,15 +336,16 @@ class App:
                         value = obj[self.evaluate(value.split('.')[1].split(':')[0], value.split('.')[1].split(':')[1],
                                                   local, line_num)]
                     else:
-                        value = getattr(obj, self.evaluate(value.split('.')[1].split(':')[0], value.split('.')[1].split(':')[1],
-                                                  local, line_num))
+                        value = getattr(obj, self.evaluate(value.split('.')[1].split(':')[0],
+                                                           value.split('.')[1].split(':')[1], local, line_num))
                 except IndexError:
                     try:
                         print(f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_RED}'
                               f'Index Error:{RESET} {ITALIC}{obj}.'
                               f'{self.evaluate(value.split('.')[1].split(':')[0], value.split('.')[1].split(':')[1], 
                                                local, line_num)} '
-                              f'out of bounds{RESET}, {FG_BRIGHT_BLUE}(length = {len(obj)}){RESET}, {FG_BRIGHT_BLUE}line {line_num + 1}{RESET}')
+                              f'out of bounds{RESET}, {FG_BRIGHT_BLUE}(length = {len(obj)}){RESET}, '
+                              f'{FG_BRIGHT_BLUE}line {line_num + 1}{RESET}')
                     except:
                         print(f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_RED}'
                               f'Syntax Error:{RESET} Statement does not have type annotations: {ITALIC}{value}'
@@ -405,15 +374,17 @@ class App:
                 try:
                     return int(value)
                 except ValueError:
-                    print(f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_RED}Value Error:{RESET} '
-                          f'{ITALIC}\'{value}\'{RESET} is not an integer, {FG_BRIGHT_BLUE}line {line_num + 1}{RESET}')
+                    print(f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_RED}Value Error:'
+                          f'{RESET} {ITALIC}\'{value}\'{RESET} is not an integer, {FG_BRIGHT_BLUE}line {line_num + 1}'
+                          f'{RESET}')
                     sys.exit(1)
             case 'float':
                 try:
                     return float(value)
                 except ValueError:
-                    print(f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_RED}Value Error:{RESET} '
-                          f'{ITALIC}\'{value}\'{RESET} is not a float, {FG_BRIGHT_BLUE}line {line_num + 1}{RESET}')
+                    print(f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_RED}Value Error:'
+                          f'{RESET} {ITALIC}\'{value}\'{RESET} is not a float, {FG_BRIGHT_BLUE}line {line_num + 1}'
+                          f'{RESET}')
                     sys.exit(1)
             case 'str':
                 return value.replace('"', '')
@@ -447,6 +418,7 @@ class App:
         # SPLIT VALUE BY OPERATORS
         result = custom_split(value)
 
+        final = None
         match var_type:
             case 'int':
                 final = 0
@@ -456,8 +428,6 @@ class App:
                 final = {}
             case 'str':
                 final = ''
-            case default:
-                final = None
 
         operations = ['+', '-', '*', '/', '//', '**', '=', '%', '@', '&']
 
@@ -476,7 +446,7 @@ class App:
                 except TypeError:
                     print(
                         f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: '
-                        f'{FG_BRIGHT_RED}Invalid opperation:{RESET}'
+                        f'{FG_BRIGHT_RED}Invalid operation:{RESET}'
                         f' cannot take the length of {FG_BRIGHT_BLUE}{final}{RESET}, invalid type ({type(final)})'
                         f', {FG_BRIGHT_BLUE}line {line_num + 1}{RESET}')
                     sys.exit(1)
@@ -504,7 +474,7 @@ class App:
                         print(
                             f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: '
                             f'{FG_BRIGHT_RED}Invalid integer operation:{RESET}'
-                            f':\n{FG_BRIGHT_BLUE}\'{current_operation}\', {value}{RESET}'
+                            f':\n{FG_BRIGHT_BLUE}\'{default}\', {value}{RESET}'
                             f', {FG_BRIGHT_BLUE}line {line_num + 1}{RESET}')
                         sys.exit(1)
             elif var_type == 'str':
@@ -519,7 +489,7 @@ class App:
                         print(
                             f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: '
                             f'{FG_BRIGHT_RED}Invalid string operation:{RESET}'
-                            f':\n{FG_BRIGHT_BLUE}\'{current_operation}\', {value}{RESET}'
+                            f':\n{FG_BRIGHT_BLUE}\'{default}\', {value}{RESET}'
                             f', {FG_BRIGHT_BLUE}line {line_num + 1}{RESET}')
                         sys.exit(1)
             elif var_type == 'list':
@@ -536,7 +506,7 @@ class App:
                         print(
                             f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: '
                             f'{FG_BRIGHT_RED}Invalid string operation:{RESET}'
-                            f':\n{FG_BRIGHT_BLUE}\'{current_operation}\', {value}{RESET}'
+                            f':\n{FG_BRIGHT_BLUE}\'{default}\', {value}{RESET}'
                             f', {FG_BRIGHT_BLUE}line {line_num + 1}{RESET}')
                         sys.exit(1)
             elif var_type == 'dict':
@@ -560,7 +530,7 @@ class App:
                         print(
                             f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: '
                             f'{FG_BRIGHT_RED}Invalid string operation:{RESET}'
-                            f':\n{FG_BRIGHT_BLUE}\'{current_operation}\', {value}{RESET}'
+                            f':\n{FG_BRIGHT_BLUE}\'{default}\', {value}{RESET}'
                             f', {FG_BRIGHT_BLUE}line {line_num + 1}{RESET}')
                         sys.exit(1)
 
@@ -580,7 +550,7 @@ class App:
                         sub_line.__contains__('$') or sub_line.__contains__('~'):
                     key = line.split('=', 1)[0].split(':', 1)[0][4:].strip()
                     value = (self.evaluate_multi(line.split('=', 1)[1].strip(),
-                                                      line.split('=', 1)[0].split(':', 1)[1].strip(), local, i))
+                                                 line.split('=', 1)[0].split(':', 1)[1].strip(), local, i))
                     if not key == '_':
                         local[key] = value
                 else:
@@ -626,5 +596,4 @@ class App:
 
 
 if __name__ == '__main__':
-    # EXAMPLE EXECUTION: python interpreter.py build\build_test2\test_sub_func.fsl int '{\"asdasdadsda\": false}'
     main()

@@ -4,71 +4,18 @@ import sys
 import threading
 import time
 
-RESET = "\033[0m"       # Resets all formatting to default
-BOLD = "\033[1m"        # Makes text bold
-DIM = "\033[2m"         # Makes text dim/faint
-ITALIC = "\033[3m"      # Makes text italic (not widely supported)
-UNDERLINE = "\033[4m"   # Underlines text
-BLINK = "\033[5m"       # Makes text blink (not widely supported)
-REVERSE = "\033[7m"     # Reverses foreground and background colors
-HIDDEN = "\033[8m"      # Makes text hidden/invisible
+# Define print variables
+RESET = "\033[0m"
+BOLD = "\033[1m"
+ITALIC = "\033[3m"
 
-# Foreground Colors
-FG_BLACK = "\033[30m"
-FG_RED = "\033[31m"
-FG_GREEN = "\033[32m"
-FG_YELLOW = "\033[33m"
-FG_BLUE = "\033[34m"
-FG_MAGENTA = "\033[35m"
-FG_CYAN = "\033[36m"
-FG_WHITE = "\033[37m"
-
-# Bright Foreground Colors
-FG_BRIGHT_BLACK = "\033[90m"
 FG_BRIGHT_RED = "\033[91m"
 FG_BRIGHT_GREEN = "\033[92m"
 FG_BRIGHT_YELLOW = "\033[93m"
 FG_BRIGHT_BLUE = "\033[94m"
-FG_BRIGHT_MAGENTA = "\033[95m"
 FG_BRIGHT_CYAN = "\033[96m"
-FG_BRIGHT_WHITE = "\033[97m"
-
-# Background Colors
-BG_BLACK = "\033[40m"
-BG_RED = "\033[41m"
-BG_GREEN = "\033[42m"
-BG_YELLOW = "\033[43m"
-BG_BLUE = "\033[44m"
-BG_MAGENTA = "\033[45m"
-BG_CYAN = "\033[46m"
-BG_WHITE = "\033[47m"
-
-# Bright Background Colors
-BG_BRIGHT_BLACK = "\033[100m"
-BG_BRIGHT_RED = "\033[101m"
-BG_BRIGHT_GREEN = "\033[102m"
-BG_BRIGHT_YELLOW = "\033[103m"
-BG_BRIGHT_BLUE = "\033[104m"
-BG_BRIGHT_MAGENTA = "\033[105m"
-BG_BRIGHT_CYAN = "\033[106m"
-BG_BRIGHT_WHITE = "\033[107m"
 
 start_time = time.time()
-
-
-# TODO: BETTER AUTOMATED TYPE FINDING FOR VARIABLE DECLARATIONS (CANNOT DETERMINE TYPE OF 'values.value:int')
-# TODO: INTEGRATE SYSTEMS FOR CALLING PYTHON FILES AND MORE LANGUAGES
-# TODO: BUILD SEMANTIC ANALYZER / INTEGRATE SEMANTIC ANALYZER
-# TODO: MAKE COMPILER MORE FLEXIBLE WITH SEMANTIC DIFFERENCES
-# TODO: MAKE CODE MORE EFFICIENT
-# TODO: BUILD IDE
-# TODO: ALLOW WRITING IF STATEMENTS IN WHILE LOOPS
-# TODO: INCREASE OPTIONS FOR LIST / DICT MANIPULATION
-# TODO: ADD COMMENTS
-# TODO: PACKAGE MANAGER BUILDER
-# TODO: TEST COMPILER WITH TASKS SUCH AS FIZBUZZ
-# TODO: BUILD A WAY TO RUN PROGRAMS THROUGH A PACKAGE MANAGER INSTEAD OF WITH LOTS OF COMMANDS
-# TODO: CODE COMPILER IN STREAM
 
 
 def read_file(path):
@@ -240,17 +187,16 @@ class App(threading.Thread):
                 case '{':  # LINE STARTS WITH DICTIONARY DECLARATION
                     return (f'dict > {self.get_type(var[1:].split(',')[0].split(':')[0], line_num)} > '
                             f'{self.get_type(var[1:].split(',')[0].split(':')[1], line_num)}')
-                case default:
-                    if var.startswith('if') or var == 'true' or var == 'false':
-                        # LINE IS BOOLEAN OR BOOLEAN EXPRESSION
-                        return 'bool'
-                    if var.isdigit():  # LINE IS INTEGER
-                        return 'int'
-                    try:
-                        float(var)
-                        return 'float'
-                    except ValueError:
-                        pass
+            if var.startswith('if') or var == 'true' or var == 'false':
+                # LINE IS BOOLEAN OR BOOLEAN EXPRESSION
+                return 'bool'
+            if var.isdigit():  # LINE IS INTEGER
+                return 'int'
+            try:
+                float(var)
+                return 'float'
+            except ValueError:
+                pass
         return 'obj'
 
     def run(self):
@@ -296,27 +242,28 @@ class App(threading.Thread):
                 if new_line.startswith('if') or new_line.startswith('elif') or new_line.startswith('while') \
                         or new_line.startswith('else'):
 
-                    if (new_line.startswith('while') and new_line.__contains__('=')) or \
-                            not new_line.startswith('while'):
+                    if (new_line.startswith('w') and new_line.__contains__('=')) or \
+                            not new_line.startswith('w'):
                         upper_checks = ['and', 'or']
                         tags = ['not']
 
                         ret = ''
-                        if new_line.startswith('if'):
+                        if new_line.startswith('i'):
                             split_line = new_line[3:].split('{')[0].split(' ')
                             ret = 'if '
-                        elif new_line.startswith('while'):
+                        elif new_line.startswith('w'):
                             split_line = new_line[6:].split('{')[0].split('=', 1)[1][3:].split(' ')
                             ret = f'while {new_line[6:].split('{')[0].split('=', 1)[0].strip()} = if '
-                        elif new_line.startswith('else'):
+                        elif new_line.startswith('els'):
                             split_line = new_line[5:].split('{')[0].split(' ')
                             ret = 'else '
-                        elif new_line.startswith('elif'):
+                        elif new_line.startswith('eli'):
                             split_line = new_line[5:].split('{')[0].split(' ')
                             ret = 'elif '
                         for part in split_line:
                             if part != '':
-                                if not part.__contains__('=') and not part.__contains__('<') and not part.__contains__('>') and part not in upper_checks and \
+                                if not part.__contains__('=') and not part.__contains__('<') \
+                                        and not part.__contains__('>') and part not in upper_checks and \
                                         part not in tags and not part.__contains__(':'):
                                     ret += f'{part.strip()}:{self.get_type(part, i)} '
                                     print(
@@ -575,9 +522,9 @@ class App(threading.Thread):
                     f'{os.path.basename(self.path).split('.')[0]}\\functions\\{line[4:].split(' ')[0]}.fsl\"'
                     f' -> {line.split('->')[1].strip().split(' ')[0]} '
                     f'{str(line.split('(')[1].split(')')[0].split(','))
-                    .replace('\'', '').replace(']', ')')
-                    .replace('[', '(')
-                    if line.split('(')[1].split(')')[0].split(',') != [''] else '()'}')
+                       .replace('\'', '').replace(']', ')')
+                       .replace('[', '(')
+                       if line.split('(')[1].split(')')[0].split(',') != [''] else '()'}')
                 depth = 0
                 data = ''
                 jump_num = 1
@@ -690,7 +637,8 @@ class App(threading.Thread):
                 if val.__contains__('='):
                     if val.startswith('let'):
                         val = val[4:]
-                    new_file += f'let {val.split('=', 1)[0].split(':')[0].strip()}: bool = {val.split('=', 1)[1].strip()}\n'
+                    new_file += (f'let {val.split('=', 1)[0].split(':')[0].strip()}: bool = '
+                                 f'{val.split('=', 1)[1].strip()}\n')
                     val = val.split('=', 1)[0].split(':')[0].strip()
                 new_line = f'do {val} {jump_num - 1}'
                 # INSERT JUMP NUM ONTO STACK (FOR NESTED WHILE LOOPS)
@@ -712,7 +660,8 @@ class App(threading.Thread):
                 elif in_while and while_general_depth[len(while_general_depth) - 1] == 0:
                     while_general_depth.pop()
                     # INSERT JUMP TO WHILE LOOP START IF CONDITIONAL STILL TRUE
-                    new_line = f'let check: bool = if not {while_var.pop()}:bool == true:bool\ndo check {-while_jump_num.pop()}'
+                    new_line = (f'let check: bool = if not {while_var.pop()}:bool == true:bool\ndo check '
+                                f'{-while_jump_num.pop()}')
                 else:
                     new_line = ''
                 in_foo = False
