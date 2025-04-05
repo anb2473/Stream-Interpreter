@@ -58,8 +58,8 @@ BG_BRIGHT_WHITE = "\033[107m"
 start_time = time.time()
 
 
-def fsl(file: str, type: str, param: dict):
-    app = App(file, param)
+def fsl(file: str, type: str, param: dict, verbose):
+    app = App(file, param, verbose)
     return app.run(type)
 
 
@@ -80,7 +80,7 @@ def load_module_from_path(filepath: str):
         return None
 
 
-def py(filepath: str, type: str, param: dict):
+def py(filepath: str, type: str, param: dict, verbose):
     """Loads a module and calls its 'main' function."""
     module = load_module_from_path(filepath)
     if module:
@@ -95,7 +95,7 @@ def py(filepath: str, type: str, param: dict):
         return "Module could not be loaded"
 
 
-def main():
+def main(verbose=False):
     # ENSURE ENOUGH ARGUMENTS ARE PASSED
     if len(sys.argv) < 4:
         print(f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_RED}Argument error:{RESET} '
@@ -123,7 +123,7 @@ def main():
     _, ext = os.path.splitext(f)
     # SEARCH EXECUTION PIPELINE FOR PROPER FUNCTION HANDLER FOR FILE TYPE
     print(f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {FG_BRIGHT_GREEN}Successfully executed file{RESET}'
-          f' at \'{f}\': \n{FG_BRIGHT_BLUE}{getattr(__import__(__name__), ext[1:])(f, return_type, params)}{RESET}')
+          f' at \'{f}\': \n{FG_BRIGHT_BLUE}{getattr(__import__(__name__), ext[1:])(f, return_type, params, verbose)}{RESET}')
 
 
 def read_file(path):
@@ -147,11 +147,11 @@ def read_file(path):
         return None
 
 
-def handler(f: str, return_type: str, params: dict):
+def handler(f: str, return_type: str, params: dict, verbose):
     # GET FILE EXTENSION AND RUN PROPER PROCEDURES FOR THAT FILE EXTENSION
     _, ext = os.path.splitext(f)
     # SEARCH EXECUTION PIPELINE FOR PROPER FUNCTION HANDLER FOR FILE TYPE
-    return getattr(__import__(__name__), ext[1:])(f, return_type, params)
+    return getattr(__import__(__name__), ext[1:])(f, return_type, params, verbose)
 
 
 def custom_split(expression):
@@ -186,8 +186,10 @@ def custom_split(expression):
 
 
 class App:
-    def __init__(self, path: str, params: dict = None):
+    def __init__(self, path: str, params: dict = None, verbose=False):
         # IF NO PARAMS VALUE SPECIFIED SET TO DEFAULT DICT
+        self.verbose = verbose
+
         if params is None:
             params = {}
 
@@ -226,7 +228,7 @@ class App:
         current = False
         for part in parts:
             # PART CONTAINS = (IS A CONDITION)
-            if part.__contains__('='):
+            if part.__contains__('=') or part.__contains__('<') or part.__contains__('>'):
                 check_type = part
             # PART IS A CONNECTING CHECK BETWEEN CONDITIONALS
             elif part in upper_checks:
@@ -235,7 +237,7 @@ class App:
             elif part in tags:
                 tag = part
             # PART IS NOT A CHECK TYPE AND CHECK TYPE IS NOT SET (PART IS A CHECK OBJECT)
-            elif check_type is None and not part.__contains__('='):
+            elif check_type is None and not part.__contains__('=') and not part.__contains__('<') and not part.__contains__('>'):
                 try:
                     check_obj = self.evaluate(part.split(':')[0], part.split(':')[1], local, line_num)
                 except IndexError:
@@ -280,6 +282,29 @@ class App:
                             sys.exit(1)
                         check_type = None
                         check_obj = None
+                    case '<':
+                        try:
+                            current = check_obj < self.evaluate(part.split(':')[0], part.split(':')[1], local,
+                                                                 line_num)
+                        except IndexError:
+                            print(
+                                f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_RED}'
+                                f'Typeless conditional check: {ITALIC}\'{part}\'{RESET}')
+                            sys.exit(1)
+                        check_type = None
+                        check_obj = None
+                    case '>':
+                        try:
+                            current = check_obj > self.evaluate(part.split(':')[0], part.split(':')[1], local,
+                                                                 line_num)
+                        except IndexError:
+                            print(
+                                f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_RED}'
+                                f'Typeless conditional check: {ITALIC}\'{part}\'{RESET}, '
+                                f'{FG_BRIGHT_BLUE}line {line_num + 1}{RESET}')
+                            sys.exit(1)
+                        check_type = None
+                        check_obj = None
                 if tag == 'not':
                     current = not current
                 tag = None
@@ -295,6 +320,8 @@ class App:
         return final
 
     def evaluate(self, value, var_type, local, line_num):
+        if value == 'None':
+            return None
         if value.startswith('exec'):
             param_build = {}
             index = 0
@@ -306,20 +333,28 @@ class App:
                       f'line {line_num + 1}{RESET}')
                 sys.exit(1)
 
-            if value.split('(')[1].split(')')[0].split(',') != ['']:
-                for param in value.split('(')[1].split(')')[0].split(','):
-                    key, param_type = self.calls[value[5:].split('(')[0]][2][index]
+            if value.split('(', 1)[1].rsplit(')', 1)[0].split(',') != ['']:
+                for param in value.split('(', 1)[1].rsplit(')', 1)[0].split(','):
+                    try:
+                        key, param_type = self.calls[value[5:].split('(')[0]][2][index]
+                    except IndexError:
+                        print(f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_RED}'
+                              f'Mismatched arguments:{RESET} '
+                              f'{ITALIC}\'{value[5:].split('(')[0].strip()}\' takes in {FG_BRIGHT_BLUE}{str(self.calls[value[5:].split('(')[0]][2]).replace('[', '(').replace(']', ')')}{RESET}, given {FG_BRIGHT_BLUE}{str(value.split('(')[1].split(')')[0].split(',')).replace('[', '(').replace(']', ')')}{RESET} {RESET}, {FG_BRIGHT_BLUE}'
+                              f'line {line_num + 1}{RESET}')
+                        sys.exit(1)
                     param_build[key.strip()] = self.evaluate(param.strip(), param_type.strip(), local, line_num)
                     index += 1
 
             result = handler(self.calls[value[5:].split('(')[0]][0], self.calls[value[5:].split('(')[0]][1],
-                             param_build | local)
+                             param_build | local, self.verbose)
 
-            print(
-                f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {FG_BRIGHT_GREEN}'
-                f'Successfully executed function file{RESET}'
-                f' at \'{self.calls[value[5:].split('(')[0]][0]}\': {FG_BRIGHT_BLUE}{result}, '
-                f'{FG_BRIGHT_BLUE}line {line_num + 1}{RESET}\n')
+            if self.verbose:
+                print(
+                    f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {FG_BRIGHT_GREEN}'
+                    f'Successfully executed function file{RESET}'
+                    f' at \'{self.calls[value[5:].split('(')[0]][0]}\': {FG_BRIGHT_BLUE}{result}, '
+                    f'{FG_BRIGHT_BLUE}line {line_num + 1}{RESET}\n')
 
             return result
         if value.__contains__('.') and not value.split('.')[0].isdigit():
@@ -330,15 +365,18 @@ class App:
                         value = obj[self.evaluate(value.split('.')[1].split(':')[0], value.split('.')[1].split(':')[1],
                                                   local, line_num)]
                     elif type(obj) is list:
-                        value = obj[self.evaluate(value.split('.')[1], value.split('.')[1].split(':')[1],
+                        value = obj[self.evaluate(value.split('.')[1].split(':')[0], value.split('.')[1].split(':')[1],
                                                   local, line_num)]
+                    else:
+                        value = getattr(obj, self.evaluate(value.split('.')[1].split(':')[0], value.split('.')[1].split(':')[1],
+                                                  local, line_num))
                 except IndexError:
                     try:
                         print(f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_RED}'
                               f'Index Error:{RESET} {ITALIC}{obj}.'
-                              f'{self.evaluate(value.split('.')[1], value.split('.')[1].split(':')[1], 
+                              f'{self.evaluate(value.split('.')[1].split(':')[0], value.split('.')[1].split(':')[1], 
                                                local, line_num)} '
-                              f'out of bounds{RESET}, {FG_BRIGHT_BLUE}line {line_num + 1}{RESET}')
+                              f'out of bounds{RESET}, {FG_BRIGHT_BLUE}(length = {len(obj)}){RESET}, {FG_BRIGHT_BLUE}line {line_num + 1}{RESET}')
                     except:
                         print(f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_RED}'
                               f'Syntax Error:{RESET} Statement does not have type annotations: {ITALIC}{value}'
@@ -359,6 +397,8 @@ class App:
         if value in local:
             return local[value]
         match var_type:
+            case 'void':
+                return None
             case 'obj':
                 return value
             case 'int':
@@ -539,13 +579,17 @@ class App:
                         sub_line.__contains__('/') or sub_line.__contains__('@') or sub_line.__contains__('&') or \
                         sub_line.__contains__('$') or sub_line.__contains__('~'):
                     key = line.split('=', 1)[0].split(':', 1)[0][4:].strip()
-                    local[key] = (self.evaluate_multi(line.split('=', 1)[1].strip(),
+                    value = (self.evaluate_multi(line.split('=', 1)[1].strip(),
                                                       line.split('=', 1)[0].split(':', 1)[1].strip(), local, i))
+                    if not key == '_':
+                        local[key] = value
                 else:
                     key = line.split('=', 1)[0].split(':', 1)[0][4:].strip()
-                    local[key] = (
+                    value = (
                         self.evaluate(line.split('=', 1)[1].strip(),
                                       line.split('=', 1)[0].split(':', 1)[1].strip(), local, i))
+                    if not key == '_':
+                        local[key] = value
             elif line.startswith('!'):
                 target = line[1:].strip()
                 if target in local:
@@ -563,19 +607,21 @@ class App:
                                               for param, param_type in [value.split(':')]]
                                              if split_line[1].split('(')[1][:-1].split(',') != [''] else []]
             elif line.startswith('return'):
-                print(
-                    f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {FG_BRIGHT_GREEN}'
-                    f'Program finished with local data{RESET}:'
-                    f'{FG_BRIGHT_BLUE} local data={local}{RESET}')
+                if self.verbose:
+                    print(
+                        f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {FG_BRIGHT_GREEN}'
+                        f'Program finished with local data{RESET}:'
+                        f'{FG_BRIGHT_BLUE} local data={local}{RESET}')
                 return self.evaluate(line[7:].strip(), return_type, local, i)
             i += 1
         print(
             f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_YELLOW}'
             f'No return statement{RESET}')
-        print(
-            f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {FG_BRIGHT_GREEN}'
-            f'Program finished with local data{RESET}:'
-            f'{FG_BRIGHT_BLUE} local data={local}{RESET}')
+        if self.verbose:
+            print(
+                f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {FG_BRIGHT_GREEN}'
+                f'Program finished with local data{RESET}:'
+                f'{FG_BRIGHT_BLUE} local data={local}{RESET}')
         return None
 
 

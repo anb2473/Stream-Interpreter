@@ -207,7 +207,7 @@ class App(threading.Thread):
         if len(var) != 0:
             if var.__contains__('.'):
                 obj = self.local[var.split('.')[0]]
-                return obj.split('>')[2].strip()
+                return obj.rsplit('>', 1)[1].strip()
             if var in self.local:
                 return self.local[var]
             if var.__contains__('*') or var.__contains__('/') or var.__contains__('+') or var.__contains__('-') \
@@ -303,20 +303,20 @@ class App(threading.Thread):
 
                         ret = ''
                         if new_line.startswith('if'):
-                            split_line = line[3:].split('{')[0].split(' ')
+                            split_line = new_line[3:].split('{')[0].split(' ')
                             ret = 'if '
                         elif new_line.startswith('while'):
-                            split_line = line[6:].split('{')[0].split('=', 1)[1][3:].split(' ')
-                            ret = f'while {line[6:].split('{')[0].split('=', 1)[0].strip()} = if '
+                            split_line = new_line[6:].split('{')[0].split('=', 1)[1][3:].split(' ')
+                            ret = f'while {new_line[6:].split('{')[0].split('=', 1)[0].strip()} = if '
                         elif new_line.startswith('else'):
-                            split_line = line[5:].split('{')[0].split(' ')
+                            split_line = new_line[5:].split('{')[0].split(' ')
                             ret = 'else '
                         elif new_line.startswith('elif'):
-                            split_line = line[5:].split('{')[0].split(' ')
+                            split_line = new_line[5:].split('{')[0].split(' ')
                             ret = 'elif '
                         for part in split_line:
                             if part != '':
-                                if not part.__contains__('=') and part not in upper_checks and \
+                                if not part.__contains__('=') and not part.__contains__('<') and not part.__contains__('>') and part not in upper_checks and \
                                         part not in tags and not part.__contains__(':'):
                                     ret += f'{part.strip()}:{self.get_type(part, i)} '
                                     print(
@@ -428,6 +428,23 @@ class App(threading.Thread):
                         f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_YELLOW}'
                         f'No let statement:{RESET} {ITALIC}\'{line}\'{RESET}'
                         f', {FG_BRIGHT_BLUE}line {i}{RESET}')
+                if new_line.__contains__('exec'):
+                    func_params = [param.strip() for param in new_line.split('(', 1)[1].rsplit(')', 1)[0].split(
+                        ',')] if '(' in new_line and ')' in new_line and new_line.find('(') < new_line.rfind(
+                        ')') else []
+                    ret = f'{new_line.split('(', 1)[0]}('
+                    index = 0
+                    last = len(func_params) - 1
+                    for param in func_params:
+                        if param.__contains__('(') and param.__contains__(')'):
+                            param = f'exec {param.lstrip()}'
+                        ret += param + ',' if index != last else param
+                        index += 1
+                    new_line = f'{ret}){new_line.rsplit(')', 1)[1]}'
+                    print(
+                        f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_YELLOW}'
+                        f'No exec tag:{RESET} {ITALIC}\'{line}\'{RESET}'
+                        f', {FG_BRIGHT_BLUE}line {i}{RESET}')
                 if new_line.startswith('let'):
                     # IF LINE HAS A DECLARATION BUT NOT A = STATEMENT INSERT VOID
                     if not re.search(r"(?<!=)=(?!=)", new_line):
@@ -451,7 +468,7 @@ class App(threading.Thread):
                         tags = ['not']
 
                         split_line = new_line.split('=', 1)[1][3:].strip().split(' ')
-                        ret = f'let {new_line.split('=', 1)[0].strip()} = '
+                        ret = f'let {new_line[4:].split('=', 1)[0].strip()} = if '
 
                         for part in split_line:
                             if part != '':
@@ -496,11 +513,13 @@ class App(threading.Thread):
         index = 0
 
         in_while = False
-        while_var = ''
+        while_var = ['']
 
         while_jump_num = []
 
         general_depth = 0
+
+        while_general_depth = []
 
         # LOOP THROUGH LINES IN FILE
         while index < len(split_file):
@@ -588,9 +607,11 @@ class App(threading.Thread):
                 sub_app.start()
 
             elif line.startswith('if'):
+                if len(while_general_depth) != 0:
+                    while_general_depth[len(while_general_depth) - 1] += 1
                 general_depth += 1
                 # BUILD CHECK
-                new_file += f'let check: bool = {line[:-1]}'
+                new_file += f'let check: bool = if {line[3:-1].strip()}'
                 depth = 0
                 jump_num = 0
                 # CALCULATE DISTANCE TO STATEMENT END
@@ -607,6 +628,8 @@ class App(threading.Thread):
                 new_line = f'\ndo check {jump_num - 1}'
 
             elif line.startswith('else'):
+                if len(while_general_depth) != 0:
+                    while_general_depth[len(while_general_depth) - 1] += 1
                 general_depth += 1
                 # REVERSE CHECK (CHECK SHOULD HAVE BEEN BUILD IN PREVIOUS STATEMENTS)
                 new_file += f'let check: bool = if not check:bool == true:bool'
@@ -627,6 +650,8 @@ class App(threading.Thread):
                 new_line = f'\ndo check {jump_num - 1}'
 
             elif line.startswith('elif'):
+                if len(while_general_depth) != 0:
+                    while_general_depth[len(while_general_depth) - 1] += 1
                 general_depth += 1
                 # FLIP CHECK (SHOULD HAVE BEEN GENERATED IN PREVIOUS STATEMENT) AND CHECK CONDITIONAL
                 new_file += f'let check: bool = if not check:bool == true:bool and {line[5:-1]}'
@@ -653,6 +678,8 @@ class App(threading.Thread):
                     if sub_line.startswith('if') or sub_line.startswith('else') or sub_line.startswith(
                             'elif') or sub_line.startswith('while'):
                         depth += 1
+                    if sub_line.startswith('while') and not sub_line == line:
+                        jump_num += 2
                     if sub_line == '}':
                         depth -= 1
                         if depth <= 0:
@@ -668,20 +695,24 @@ class App(threading.Thread):
                 new_line = f'do {val} {jump_num - 1}'
                 # INSERT JUMP NUM ONTO STACK (FOR NESTED WHILE LOOPS)
                 while_jump_num.append(jump_num - 1)
+                while_general_depth.append(1)
                 in_while = True
-                while_var = val
+                while_var.append(val)
                 # RESET GENERAL DEPTH
                 # general_depth = 0
 
             elif line == '}':
                 general_depth -= 1
+                if len(while_general_depth) != 0:
+                    while_general_depth[len(while_general_depth) - 1] -= 1
                 if in_foo:
                     # INSERT RETURN STATEMENT IF NO RETURN STATEMENT EXISTS
                     if index - 1 >= 0 and not split_file[index - 1].startswith('return'):
                         new_file += f'return void\n'
-                elif in_while:
+                elif in_while and while_general_depth[len(while_general_depth) - 1] == 0:
+                    while_general_depth.pop()
                     # INSERT JUMP TO WHILE LOOP START IF CONDITIONAL STILL TRUE
-                    new_line = f'check = if not {while_var}\ndo check {-while_jump_num.pop()}'
+                    new_line = f'let check: bool = if not {while_var.pop()}:bool == true:bool\ndo check {-while_jump_num.pop()}'
                 else:
                     new_line = ''
                 in_foo = False

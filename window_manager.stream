@@ -1,0 +1,35 @@
+prototype wininit "C:\Users\austi\PycharmProjects\Stream JSON Compiler\test_env\builtins\display_api\wininit.py" -> int (name:str, width:int, height:int, icon:str, resizable:bool)
+prototype circle "C:\Users\austi\PycharmProjects\Stream JSON Compiler\test_env\builtins\display_api\circle.py" -> int (screen:obj, x:int, y:int, radius:int)
+prototype update "C:\Users\austi\PycharmProjects\Stream JSON Compiler\test_env\builtins\display_api\update.py" -> list>obj ()
+prototype get_events "C:\Users\austi\PycharmProjects\Stream JSON Compiler\test_env\builtins\display_api\get_events.py" -> int ()
+prototype quit "C:\Users\austi\PycharmProjects\Stream JSON Compiler\test_env\builtins\display_api\quit.py" -> int ()
+prototype _QUIT "C:\Users\austi\PycharmProjects\Stream JSON Compiler\test_env\builtins\display_api\_QUIT.py" -> obj ()
+
+prototype print "C:\Users\austi\PycharmProjects\Stream JSON Compiler\test_env\builtins\os\print.py" -> int (val:str)
+prototype len "C:\Users\austi\PycharmProjects\Stream JSON Compiler\test_env\builtins\os\len.py" -> int (val:obj)
+
+window = wininit("test", 1000, 500, None, True)
+
+x = 0
+_quit = _QUIT()
+while true {
+    circle(window, x, 100, 100)
+    update()
+    val:list>obj = get_events()
+
+    index = 0
+    unaltered_len = len(val)
+    length: int = unaltered_len - 1
+    while continue = if index <= length {
+        item = val.index
+        typeof_item:obj = item.type
+        if typeof_item == _quit {
+            quit()
+        }
+        index = index + 1
+        continue = if index <= length
+    }
+    x = x + 1
+}
+
+return 0
