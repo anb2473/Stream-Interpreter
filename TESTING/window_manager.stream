@@ -1,0 +1,35 @@
+prototype wininit "builtins\display_api\wininit.py" -> int (name:str, width:int, height:int, icon:str, resizable:bool)
+prototype circle "builtins\display_api\circle.py" -> int (screen:obj, x:int, y:int, radius:int)
+prototype update "builtins\display_api\update.py" -> list>obj ()
+prototype get_events "builtins\display_api\get_events.py" -> int ()
+prototype quit "builtins\display_api\quit.py" -> int ()
+prototype _QUIT "builtins\display_api\_QUIT.py" -> obj ()
+
+prototype print "builtins\os\print.py" -> int (val:str)
+prototype len "builtins\os\len.py" -> int (val:obj)
+
+window = wininit("test", 1000, 500, None, True)
+
+x = 0
+_quit = _QUIT()
+while true {
+    circle(window, x, 100, 100)
+    update()
+    val:list>obj = get_events()
+
+    index = 0
+    unaltered_len = len(val)
+    length: int = unaltered_len - 1
+    while continue = if index <= length {
+        item = val.index
+        typeof_item:obj = item.type
+        if typeof_item == _quit {
+            quit()
+        }
+        index = index + 1
+        continue = if index <= length
+    }
+    x = x + 1
+}
+
+return 0
