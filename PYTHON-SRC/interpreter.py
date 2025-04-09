@@ -59,17 +59,22 @@ def py(filepath: str, _return_type: str, param: dict, _verbose):
 
 def main(verbose=False):
     # ENSURE ENOUGH ARGUMENTS ARE PASSED
-    if len(sys.argv) < 4:
+    if len(sys.argv) < 5:
         print(f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_RED}Argument error:{RESET} '
               f'Not enough arguments {FG_BRIGHT_BLUE}(Must have 3: file path, return type, parameters){RESET}')
         sys.exit(1)
-    elif len(sys.argv) > 4:
+    elif len(sys.argv) > 5:
         print(f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {BOLD}{FG_BRIGHT_YELLOW}'
               f'Too many arguments{RESET} {FG_BRIGHT_BLUE}(Should have 3: file path, return type, parameters){RESET}')
 
-    f = sys.argv[1].replace('+', ' ')
+    f = sys.argv[1]
     return_type = sys.argv[2]
-    params = str(sys.argv[3]).replace('+', ' ')
+    params = str(sys.argv[3])
+    verbose = str(sys.argv[4]).lower()
+    if verbose == "true":
+        verbose = True
+    else:
+        verbose = False
 
     print(f'{FG_BRIGHT_CYAN}{time.time() - start_time}{RESET}: {FG_BRIGHT_GREEN}Running with parameters {RESET}:'
           f' \n{FG_BRIGHT_BLUE}return type={return_type}, parameters={params}{RESET}\n')
@@ -118,7 +123,7 @@ def handler(f: str, return_type: str, params: dict, verbose):
 
 
 def custom_split(expression):
-    operators = ['**', '//', '+', '-', '*', '/', '~', '$', '@', '&']  # List of operators
+    operators = ['**', '//', '+', '-', '*', '/', '~', '$', '@', '&', '%']  # List of operators
     result = ['=']
     current = ""
     i = 0
@@ -332,7 +337,7 @@ class App:
                     if type(obj) is dict:
                         value = obj[self.evaluate(value.split('.')[1].split(':')[0], value.split('.')[1].split(':')[1],
                                                   local, line_num)]
-                    elif type(obj) is list:
+                    elif type(obj) is list or type(obj) is str:
                         value = obj[self.evaluate(value.split('.')[1].split(':')[0], value.split('.')[1].split(':')[1],
                                                   local, line_num)]
                     else:
@@ -429,7 +434,7 @@ class App:
             case 'str':
                 final = ''
 
-        operations = ['+', '-', '*', '/', '//', '**', '=', '%', '@', '&']
+        operations = ['+', '-', '*', '/', '//', '**', '=', '%', '@', '&', '%']
 
         current_operation = ''
 
@@ -547,7 +552,7 @@ class App:
                 sub_line = line.split('=')[1]
                 if sub_line.__contains__('+') or sub_line.__contains__('-') or sub_line.__contains__('*') or \
                         sub_line.__contains__('/') or sub_line.__contains__('@') or sub_line.__contains__('&') or \
-                        sub_line.__contains__('$') or sub_line.__contains__('~'):
+                        sub_line.__contains__('$') or sub_line.__contains__('~') or sub_line.__contains__('%'):
                     key = line.split('=', 1)[0].split(':', 1)[0][4:].strip()
                     value = (self.evaluate_multi(line.split('=', 1)[1].strip(),
                                                  line.split('=', 1)[0].split(':', 1)[1].strip(), local, i))
