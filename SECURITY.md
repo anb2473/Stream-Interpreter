@@ -6,16 +6,8 @@ Software versions currently being maintained for security issues:
 
 |   Version       |   Supported   |
 |   -------       |   ------------------   |
-|   1.0.0-alpha   |   :x:                  |
-|   1.0.0         |   :x:                  |
-|   1.1.0         |   :x:                  |
-|   1.2.0         |   :x:                  |
-|   1.2.0+        |   :x:                  |
-|   1.2.0++       |   :x:                  |
-|   2.0.0         |   :x:                  |
-|   2.0.1         |   :x:                  |
-|   2.0.2         |   :white_check_mark:   |
-|   2.1.0         |   :white_check_mark:   |
+|   Pre 4.2.0     |   :x:                  |
+|   4.2.0         |   :white_check_mark:   |
 
 **Note:** We plan to consistently address security concerns in certain legacy models, so deprecated legacy features should not pose a significant security risk. If you wish to request support for a legacy version or report an issue on an unsupported version, please feel free to open a new issue in the repository's "Issues" section.
 
